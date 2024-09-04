@@ -1,0 +1,8 @@
+#chart {
+    width: 60%;
+    height: 60%;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    margin: 0px auto;
+}
