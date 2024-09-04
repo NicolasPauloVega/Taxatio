@@ -16,11 +16,31 @@
 
     $id = $_GET['id']; // Almacenamos el id
 
-    // Realizamos la consulta
-    $sql = "SELECT * FROM usuario WHERE Id_rol = $id";
+    // Definir cuántos resultados se mostrarán por página
+    $resultados_por_pagina = 5;
 
-    // Ejecutar la consulta
-    $query = mysqli_query($connection, $sql);
+    // Determinar en qué página está el usuario
+    if (isset($_GET['pagina']) && is_numeric($_GET['pagina'])) {
+        $pagina_actual = $_GET['pagina'];
+    } else {
+        $pagina_actual = 1;
+    }
+
+    // Determinar el número total de resultados en la tabla
+    $sql_count = "SELECT COUNT(*) AS total FROM usuario WHERE Id_rol = $id";
+    $resultado_count = mysqli_query($connection, $sql_count);
+    $fila_count = mysqli_fetch_assoc($resultado_count);
+    $total_resultados = $fila_count['total'];
+
+    // Calcular el número total de páginas
+    $total_paginas = ceil($total_resultados / $resultados_por_pagina);
+
+    // Calcular el índice inicial para la consulta de SQL
+    $indice_inicial = ($pagina_actual - 1) * $resultados_por_pagina;
+
+    // Consulta SQL para obtener los resultados de la página actual
+    $sql = "SELECT * FROM usuario WHERE Id_rol = $id LIMIT $indice_inicial, $resultados_por_pagina";
+    $query = mysqli_query($connection, $sql);;
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -115,6 +135,42 @@
                     <?php endif; ?>
                 </tbody>
             </table>
+        </div>
+
+        <!-- Paginacion -->
+        <div class="container mb-4">
+            <nav aria-label="Paginación">
+                <ul class="pagination justify-content-center">
+                    <?php if($pagina_actual > 1): ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?id=<?= $id ?>&pagina=1">&laquo; Primera</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?id=<?= $id ?>&pagina=<?= $pagina_actual - 1 ?>">&lsaquo; Anterior</a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php
+                    $rango_inicio = max(1, $pagina_actual - 4);
+                    $rango_fin = min($total_paginas, $pagina_actual + 5);
+                    ?>
+
+                    <?php for($i = $rango_inicio; $i <= $rango_fin; $i++): ?>
+                        <li class="page-item <?= ($i == $pagina_actual) ? 'active' : '' ?>">
+                            <a class="page-link" href="?id=<?= $id ?>&pagina=<?= $i ?>"><?= $i ?></a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <?php if($pagina_actual < $total_paginas): ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?id=<?= $id ?>&pagina=<?= $pagina_actual + 1 ?>">Siguiente &rsaquo;</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?id=<?= $id ?>&pagina=<?= $total_paginas ?>">Última &raquo;</a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </nav>
         </div>
     </div>
 

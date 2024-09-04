@@ -14,11 +14,41 @@
 
     include('../../model/database.php'); // Incluir la base de datos
 
-    // Realizamos la consulta
-    $sql = "SELECT * FROM usuario u JOIN rol r ON u.Id_rol = r.Id_rol WHERE r.Id_rol != 1";
+    // Definir el número de usuarios por página
+    $usuarios_por_pagina = 5;
+
+    // Calcular la página actual
+    if (isset($_GET['pagina']) && is_numeric($_GET['pagina'])) {
+        $pagina_actual = (int) $_GET['pagina'];
+    } else {
+        $pagina_actual = 1;
+    }
+
+    // Calcular el OFFSET para la consulta SQL
+    $offset = ($pagina_actual - 1) * $usuarios_por_pagina;
+
+    // Realizamos la consulta con LIMIT y OFFSET
+    $sql = "SELECT * FROM usuario JOIN rol ON usuario.Id_rol = rol.Id_rol WHERE rol.Id_rol != 1 ORDER BY Id_usuario ASC LIMIT $usuarios_por_pagina OFFSET $offset";
 
     // Ejecutar la consulta
     $query = mysqli_query($connection, $sql);
+
+    // Contar el número total de registros
+    $total_usuarios_sql = "SELECT COUNT(*) AS total FROM usuario";
+    $total_usuarios_result = mysqli_query($connection, $total_usuarios_sql);
+    $total_usuarios = mysqli_fetch_assoc($total_usuarios_result)['total'];
+
+    // Calcular el número total de páginas
+    $total_paginas = ceil($total_usuarios / $usuarios_por_pagina);
+
+    // Definir el rango de botones que se mostrarán en la paginación
+    $max_boton_paginacion = 10; // Número máximo de botones a mostrar
+    $rango_inicio = max(1, $pagina_actual - floor($max_boton_paginacion / 2));
+    $rango_fin = min($total_paginas, $rango_inicio + $max_boton_paginacion - 1);
+
+    if ($rango_fin - $rango_inicio < $max_boton_paginacion - 1) {
+        $rango_inicio = max(1, $rango_fin - $max_boton_paginacion + 1);
+    }
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -111,6 +141,42 @@
                     <?php endwhile; ?>
                 </tbody>
             </table>
+        </div>
+
+        <!-- Enlaces de paginación -->
+        <nav aria-label="Paginación de usuarios">
+            <ul class="pagination justify-content-center">
+                <?php if($pagina_actual > 1): ?>
+                    <li class="page-item"><a class="page-link" href="?pagina=<?= $pagina_actual - 1 ?>">Anterior</a></li>
+                <?php endif; ?>
+
+                <?php if($rango_inicio > 1): ?>
+                    <li class="page-item"><a class="page-link" href="?pagina=1">1</a></li>
+                    <?php if($rango_inicio > 2): ?>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    <?php endif; ?>
+                <?php endif; ?>
+
+                <?php for($i = $rango_inicio; $i <= $rango_fin; $i++): ?>
+                    <li class="page-item <?= ($pagina_actual == $i) ? 'active' : '' ?>">
+                        <a class="page-link" href="?pagina=<?= $i ?>"><?= $i ?></a>
+                    </li>
+                <?php endfor; ?>
+
+                <?php if($rango_fin < $total_paginas): ?>
+                    <?php if($rango_fin < $total_paginas - 1): ?>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    <?php endif; ?>
+                    <li class="page-item"><a class="page-link" href="?pagina=<?= $total_paginas ?>"><?= $total_paginas ?></a></li>
+                    <?php endif; ?>
+                        <?php if($pagina_actual < $total_paginas): ?>
+                            <li class="page-item"><a class="page-link" href="?pagina=<?= $pagina_actual + 1 ?>">Siguiente</a></li>
+                        <?php endif; ?>
+                    </ul>
+                </nav>
+            </div>
+
+        <div class="text-center mb-4">
             <!-- Botón para Registrar un nuevo usaurio -->
             <a href="./add_user.php" class="btn btn-success">Registrar Instructor</a>
             <a href="./register.php" class="btn btn-success">Resgistrar Aprendiz</a>

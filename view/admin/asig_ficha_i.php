@@ -71,10 +71,10 @@
     </nav><br><br>
 
     <!-- Contenido de Gestión de Usuarios -->
-    <div class="d-flex justify-content-center align-items-center vh-95">
+    <div class="d-flex justify-content-center align-items-center vh-95 text-center">
         <div class="card p-4 shadow-sm" style="max-width: 500px; width: 100%; background-color: #ffffff;">
             <div class="card-body">
-                <h3 class="card-title text-center mb-4 text-success">Asignar ficha al aprendiz - <?php echo $row['Nombre'] . " " . $row['Apellido'] ?></h3>
+                <h3 class="card-title text-center mb-4 text-success">Asignar ficha al Instructor</h3>
                 <form action="" method="POST">
                     <?php include '../../controller/asig_ficha_i.php'; ?>
                     <div class="mb-3" style="display: none;">
@@ -101,12 +101,13 @@
                     </div>
 
                     <div class="mb-3">
-                        <input type="submit" value="Asignar" name="assign" id="assign" class="btn btn-success">
+                        <input type="submit" value="Asignar" name="assign" id="assign" class="btn btn-success form-control">
                     </div>
+                    <a href="./instructor.php?id=3" class="text-success">Volver</a>
                 </form>
             </div>
         </div>
-    </div>
+    </div><br><br>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
