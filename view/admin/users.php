@@ -15,7 +15,7 @@
     include('../../model/database.php'); // Incluir la base de datos
 
     // Realizamos la consulta
-    $sql = "SELECT * FROM usuario u JOIN rol r ON u.Id_rol = r.Id_rol";
+    $sql = "SELECT * FROM usuario u JOIN rol r ON u.Id_rol = r.Id_rol WHERE r.Id_rol != 1";
 
     // Ejecutar la consulta
     $query = mysqli_query($connection, $sql);
@@ -30,6 +30,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Iconos de FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-light">
 
@@ -72,11 +74,11 @@
     <div class="container my-5 text-center">
         <h1 class="mb-4 text-success">Gestión de Usuarios</h1>
 
-        <div class="mb-5">
+        <div class="mb-6">
             <a href="./instructor.php?id=3" class="btn btn-success">Instructores</a>
             <a href="./aprendiz.php?id=2" class="btn btn-success">Aprendizes</a>
             <a href="./ficha.php" class="btn btn-success">Ficha</a>
-        </div>
+        </div><br>
 
         <!-- Tabla de Usuarios -->
         <div class="table-responsive mb-4">
@@ -109,11 +111,9 @@
                     <?php endwhile; ?>
                 </tbody>
             </table>
-        </div>
-
-        <!-- Botón para Registrar un Nuevo Aprendiz -->
-        <div class="mb-4">
+            <!-- Botón para Registrar un nuevo usaurio -->
             <a href="./add_user.php" class="btn btn-success">Registrar Instructor</a>
+            <a href="./register.php" class="btn btn-success">Resgistrar Aprendiz</a>
         </div>
     </div>
 

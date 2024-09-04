@@ -12,20 +12,14 @@
     // Almacenamos la sesion
     $user = $_SESSION['usuario'];
 
-    include('../../model/database.php'); // Incluir la base de datos
-
-    // Realizamos una consulta para encuestas y preguntas
-    $sql = "SELECT * FROM encuesta";
-
-    // Ejecutamos las consultas
-    $query = mysqli_query($connection, $sql);
+    include '../../model/database.php';
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encuestas - Taxatio</title>
+    <title>Crear encuesta - Taxatio</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Iconos de FontAwesome -->
@@ -69,46 +63,48 @@
             </div>
         </div>
     </nav>
-
-    <!-- Tabla de Encuestas -->
-    <div class="container my-5">
-        <h1 class="mb-4 text-success text-center">Encuestas</h1>
-        <div class="table-responsive mb-4">
-            <table class="table table-bordered table-striped text-center">
-                <thead>
-                    <tr>
-                        <th>Trimestre</th>
-                        <th>Año</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                        // Creamos un bucle para iterar sobre la informacion de la base de datos
-                        while($row = mysqli_fetch_array($query)):
-                    ?>
-                    <tr>
-                        <td><?= $row['Trimestre']?></td>
-                        <td><?= $row['Ano'] ?></td>
-                        <td><?= $row['Estado'] ?></td>
-                        <td>
-                            <a href="./edit_survey.php?id=<?= $row['Id_encuesta'] ?>" class="btn btn-warning btn-sm">Editar</a>
-                            <a href="./add_question.php?id=<?= $row['Id_encuesta'] ?>" class="btn btn-success btn-sm">Agregar Pregunta</a>
-                            <a href="./question.php?id=<?= $row['Id_encuesta'] ?>" class="btn btn-info btn-sm">Ver Pregunta</a>
-                        </td>
-                    </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
+<br><br>
+    <!-- Formulario de Registro -->
+    <div class="d-flex justify-content-center align-items-center vh-100" style="padding-top: 60px; padding-bottom: 60px;">
+        <div class="card p-4 shadow-sm" style="max-width: 500px; width: 100%; background-color: #ffffff;">
+            <div class="card-body">
+                <h3 class="card-title text-center mb-4 text-success">Registro</h3>
+                <form action="" method="POST">
+                    <?php include('../../controller/validate.php'); ?>
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label text-dark">Nombre</label>
+                        <input type="text" class="form-control border-success text-dark" id="name" name="name" placeholder="Nombre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="apellido" class="form-label text-dark">Apellido</label>
+                        <input type="text" class="form-control border-success text-dark" id="last_name" name="last_name" placeholder="Apellido" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tipo_cedula" class="form-label text-dark">Tipo de Documento</label>
+                        <select class="form-select border-success text-dark" id="type_document" name="type_document" required>
+                            <option value="" disabled selected>Selecciona el tipo de documento</option>
+                            <option value="TI">Tarjeta de Identidad</option>
+                            <option value="CC">Cédula de Ciudadanía</option>
+                            <option value="CE">Cédula de Extranjería</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="numero_documento" class="form-label text-dark">Número de Documento</label>
+                        <input type="text" class="form-control border-success text-dark" id="number_document" name="number_document" placeholder="Número de documento" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pass" class="form-label text-dark">Contraseña</label>
+                        <input type="text" class="form-control border-success text-dark" id="pass" name="pass" placeholder="Ingresa tu contraseña de minimo 8 caracteres" required>
+                    </div>
+                    <input type="submit" class="btn w-100" name="register" value="Registrar" style="background-color: #2E7D32; color: #ffffff;">
+                </form>
+                <div class="text-center mt-3">
+                    <a href="../admin/users.php" class="text-success" style="text-decoration: none;">Volver</a>
+                </div>
+            </div>
         </div>
     </div>
-
-    <!-- Boton para agregar encuesta -->
-    <div class="text-center mb-5">
-        <a href="./add_survey.php" class="btn btn-success">Añadir Encuesta</a>
-    </div>
-
+<br><br>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -1,26 +1,32 @@
 <?php
     ///////////////////////////////// Manejo de sesiones /////////////////////////////////////////////
-    // Manejo de sesiones
     session_start();
 
     // Verificamos si el usuario está logueado o no
-    if (!isset($_SESSION['usuario']) || $_SESSION['usuario'] == '') {
-        header('location: ../index.php');
+    if (!isset($_SESSION['usuario']) || $_SESSION['usuario'] == '' || $_SESSION['usuario'] != 1) {
+        header('location: ../../view/home.php');
         exit();
     }
 
-    // Almacenamos la sesion
     $user = $_SESSION['usuario'];
-    
-    // Incluimos la base de datos
-    include('../model/database.php');
+
+    include('../model/database.php'); // Incluir la base de datos
+
+    // Realizamos la consulta
+    $sql = "SELECT u.Nombre, u.Apellido, r.Tipo 
+            FROM usuario u 
+            JOIN rol r ON u.Id_rol = r.Id_rol 
+            WHERE Id_usuario = $user";
+
+    $query = mysqli_query($connection, $sql);
+    $row = mysqli_fetch_array($query);
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio - Taxatio</title>
+    <title>Perfil - Taxatio</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Iconos de FontAwesome -->
@@ -61,19 +67,31 @@
         </div>
     </nav>
 
-    <!-- Contenido de la Página de Inicio -->
+    <!-- Información del usuario -->
     <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card p-4 shadow-sm border-success" style="background-color: #f9f9f9;">
+                <div class="card border-success">
+                    <div class="card-header bg-success text-white text-center">
+                        <h2>Perfil de Usuario</h2>
+                    </div>
                     <div class="card-body">
-                        <h1 class="card-title text-center mb-4 text-success">Bienvenido a Taxatio</h1>
-                        <p class="text-dark">
-                            <strong>Taxatio</strong> es una plataforma de evaluaciones en línea cuyo objetivo es mejorar la satisfacción del aprendiz en cuanto al trato y manera de enseñar del instructor. Nuestro propósito es conocer la opinión de los aprendices sobre su experiencia educativa para ayudar a los instructores a ofrecer una mejor calidad en su enseñanza.
-                        </p>
-                        <p class="text-dark">
-                            En <strong>Taxatio</strong>, valoramos los comentarios de nuestros apendices y nos esforzamos por crear un entorno de aprendizaje más efectivo y agradable. A través de nuestras evaluaciones, buscamos facilitar una comunicación abierta y constructiva entre aprendices e instructores.
-                        </p>
+                        <table class="table table-borderless text-center">
+                            <thead>
+                                <tr>
+                                    <th>Icono</th>
+                                    <th>Rol</th>
+                                    <th>Nombre Completo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><i class="fa-solid fa-user-tie fa-2x text-success"></i></td>
+                                    <td><?php echo $row['Tipo']; ?></td>
+                                    <td><?php echo $row['Nombre'] . " " . $row['Apellido']; ?></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

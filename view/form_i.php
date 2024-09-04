@@ -28,11 +28,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio - Taxatio</title>
+    <title>Encuesta - Taxatio</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Iconos de FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -52,10 +54,10 @@
                         <a class="nav-link text-white" href="./home.php">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="./evaluate.php">Evaluar</a>
+                        <a class="nav-link text-white" href="./evaluate.php">Encuestar</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#">
+                        <a class="nav-link text-white" href="./user.php">
                             <i class="fas fa-user"></i>
                         </a>
                     </li>
@@ -65,7 +67,7 @@
                 </ul>
             </div>
         </div>
-    </nav><br>
+    </nav>
 
     <!-- Formulario de Registro -->
     <div class="d-flex justify-content-center align-items-center vh-50">

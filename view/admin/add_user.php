@@ -19,7 +19,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear encuesta - Taxatio</title>
+    <title>Crear usuario - Taxatio</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Iconos de FontAwesome -->
@@ -63,8 +63,6 @@
             </div>
         </div>
     </nav>
-    
-    <br><br><br><br><br><br>
 
     <!-- Formulario de Registro -->
     <div class="d-flex justify-content-center align-items-center vh-100" style="padding-top: 60px; padding-bottom: 60px;">
@@ -98,22 +96,6 @@
                         <label for="rol" class="form-label text-dark">Rol</label>
                         <input type="text" name="rol" id="rol" class="form-control border-success text-dark" value="3">
                     </div>
-                    <div class="mb-3">
-                        <label for="number_ficha" class="form-label text-dark">Número de ficha</label>
-                        <input type="text" class="form-control border-success text-dark" id="number" name="number" placeholder="Ingresa tu número de ficha" required minlength="6">
-                    </div>
-                    <div class="mb-3">
-                        <label for="competence" class="form-label text-dark">Competencia</label>
-                        <select name="competence" id="competence" class="form-select border-success text-dark">
-                            <option value="" disabled selected>Selecciona el tipo de competencia</option>
-                            <option value="Transversal">Transversal</option>
-                            <option value="Tecnica">Técnica</option> 
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="Competence" class="form-label text-dark">Nombre de la competencia</label>
-                        <input type="text" class="form-control border-success text-dark" id="name_competence" name="name_competence" placeholder="Nombre de la competencia">
-                    </div>
                     <input type="submit" class="btn w-100" name="register" value="Registrar" style="background-color: #2E7D32; color: #ffffff;">
                 </form>
                 <div class="text-center mt-3">
@@ -122,8 +104,6 @@
             </div>
         </div>
     </div>
-
-    <br><br><br><br><br><br>
     
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>

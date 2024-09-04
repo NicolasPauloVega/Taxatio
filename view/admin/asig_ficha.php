@@ -14,18 +14,18 @@
 
     include('../../model/database.php'); // Incluir la base de datos
 
-    // Realizamos una consulta para encuestas y preguntas
-    $sql = "SELECT * FROM encuesta";
+    $id = $_GET['id'];
 
-    // Ejecutamos las consultas
+    $sql = "SELECT * FROM usuario WHERE Id_usuario = $id ";
     $query = mysqli_query($connection, $sql);
+    $row = mysqli_fetch_array($query);
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encuestas - Taxatio</title>
+    <title>Gestión de Usuarios - Taxatio</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Iconos de FontAwesome -->
@@ -59,8 +59,8 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link text-white" href="./evaluations.php">Evaluaciones</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="./user.php"><i class="fas fa-user"></i></a>
+                    <li class="nav-item nav-link text-white">
+                        <i class="fa-solid fa-user-tie"></i>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="../../controller/logout.php"><i class="fas fa-sign-out-alt"></i></a>
@@ -68,45 +68,30 @@
                 </ul>
             </div>
         </div>
-    </nav>
+    </nav><br><br>
 
-    <!-- Tabla de Encuestas -->
-    <div class="container my-5">
-        <h1 class="mb-4 text-success text-center">Encuestas</h1>
-        <div class="table-responsive mb-4">
-            <table class="table table-bordered table-striped text-center">
-                <thead>
-                    <tr>
-                        <th>Trimestre</th>
-                        <th>Año</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                        // Creamos un bucle para iterar sobre la informacion de la base de datos
-                        while($row = mysqli_fetch_array($query)):
-                    ?>
-                    <tr>
-                        <td><?= $row['Trimestre']?></td>
-                        <td><?= $row['Ano'] ?></td>
-                        <td><?= $row['Estado'] ?></td>
-                        <td>
-                            <a href="./edit_survey.php?id=<?= $row['Id_encuesta'] ?>" class="btn btn-warning btn-sm">Editar</a>
-                            <a href="./add_question.php?id=<?= $row['Id_encuesta'] ?>" class="btn btn-success btn-sm">Agregar Pregunta</a>
-                            <a href="./question.php?id=<?= $row['Id_encuesta'] ?>" class="btn btn-info btn-sm">Ver Pregunta</a>
-                        </td>
-                    </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
+    <!-- Contenido de Gestión de Usuarios -->
+    <div class="d-flex justify-content-center align-items-center vh-95">
+        <div class="card p-4 shadow-sm" style="max-width: 500px; width: 100%; background-color: #ffffff;">
+            <div class="card-body">
+                <h3 class="card-title text-center mb-4 text-success">Asignar ficha al aprendiz - <?php echo $row['Nombre'] . " " . $row['Apellido'] ?></h3>
+                <form action="" method="POST">
+                    <?php include '../../controller/asig_ficha.php'; ?>
+                    <div class="mb-3" style="display: none;">
+                        <input type="number" class="form-control text-success border-success" name="user" id="user" value="<?php echo $row['Id_usuario'] ?>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="number" class="form-label">Numero de ficha</label>
+                        <input type="text" class="form-control text-success border-success" name="number" id="number" placeholder="Ingresa el numero de ficha del programa">
+                    </div>
+
+                    <div class="mb-3">
+                        <input type="submit" value="Asignar" name="assign" id="assign" class="btn btn-success">
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-
-    <!-- Boton para agregar encuesta -->
-    <div class="text-center mb-5">
-        <a href="./add_survey.php" class="btn btn-success">Añadir Encuesta</a>
     </div>
 
     <!-- Bootstrap JS -->

@@ -35,6 +35,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Iconos de FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- css -->
      <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
@@ -78,7 +80,7 @@
 
     <!-- Tablas de preguntas -->
     <div class="container my-5">
-        <h1 class="mb-4 text-success text-center">Respuestas </h1>
+        <h1 class="mb-4 text-success text-center">Preguntas </h1>
         <div class="table-responsive">
             <table class="table table-bordered table-hover text-center">
                 <thead class="table-success">

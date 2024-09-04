@@ -1,6 +1,5 @@
 <?php
     ///////////////////////////////// Manejo de sesiones /////////////////////////////////////////////
-    // Manejo de sesiones
     session_start();
 
     // Verificamos si el usuario está logueado o no
@@ -9,23 +8,25 @@
         exit();
     }
 
-    // Almacenamos la sesion
     $user = $_SESSION['usuario'];
 
     include('../../model/database.php'); // Incluir la base de datos
 
-    // Realizamos una consulta para encuestas y preguntas
-    $sql = "SELECT * FROM encuesta";
+    // Realizamos la consulta
+    $sql = "SELECT u.Nombre, u.Apellido, r.Tipo 
+            FROM usuario u 
+            JOIN rol r ON u.Id_rol = r.Id_rol 
+            WHERE Id_usuario = $user";
 
-    // Ejecutamos las consultas
     $query = mysqli_query($connection, $sql);
+    $row = mysqli_fetch_array($query);
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encuestas - Taxatio</title>
+    <title>Perfil - Taxatio</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Iconos de FontAwesome -->
@@ -56,7 +57,7 @@
                     <li class="nav-item">
                         <a class="nav-link text-white" href="./results.php">Resultados</a>
                     </li>
-                    <li class="nav-item dropdown">
+                    <li class="nav-item">
                         <a class="nav-link text-white" href="./evaluations.php">Evaluaciones</a>
                     </li>
                     <li class="nav-item">
@@ -70,43 +71,35 @@
         </div>
     </nav>
 
-    <!-- Tabla de Encuestas -->
+    <!-- Información del usuario -->
     <div class="container my-5">
-        <h1 class="mb-4 text-success text-center">Encuestas</h1>
-        <div class="table-responsive mb-4">
-            <table class="table table-bordered table-striped text-center">
-                <thead>
-                    <tr>
-                        <th>Trimestre</th>
-                        <th>Año</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                        // Creamos un bucle para iterar sobre la informacion de la base de datos
-                        while($row = mysqli_fetch_array($query)):
-                    ?>
-                    <tr>
-                        <td><?= $row['Trimestre']?></td>
-                        <td><?= $row['Ano'] ?></td>
-                        <td><?= $row['Estado'] ?></td>
-                        <td>
-                            <a href="./edit_survey.php?id=<?= $row['Id_encuesta'] ?>" class="btn btn-warning btn-sm">Editar</a>
-                            <a href="./add_question.php?id=<?= $row['Id_encuesta'] ?>" class="btn btn-success btn-sm">Agregar Pregunta</a>
-                            <a href="./question.php?id=<?= $row['Id_encuesta'] ?>" class="btn btn-info btn-sm">Ver Pregunta</a>
-                        </td>
-                    </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card border-success">
+                    <div class="card-header bg-success text-white text-center">
+                        <h2>Perfil de Usuario</h2>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-borderless text-center">
+                            <thead>
+                                <tr>
+                                    <th>Icono</th>
+                                    <th>Rol</th>
+                                    <th>Nombre Completo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><i class="fa-solid fa-user-tie fa-2x text-success"></i></td>
+                                    <td><?php echo $row['Tipo']; ?></td>
+                                    <td><?php echo $row['Nombre'] . " " . $row['Apellido']; ?></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <!-- Boton para agregar encuesta -->
-    <div class="text-center mb-5">
-        <a href="./add_survey.php" class="btn btn-success">Añadir Encuesta</a>
     </div>
 
     <!-- Bootstrap JS -->
