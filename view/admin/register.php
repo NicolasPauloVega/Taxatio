@@ -51,7 +51,7 @@
                         <a class="nav-link text-white" href="./results.php">Resultados</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link text-white" href="./evaluations.php">Evaluaciones</a>
+                        <a class="nav-link text-white" href="./evaluations.php">Encuestas</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="./user.php"><i class="fas fa-user"></i></a>
@@ -63,7 +63,7 @@
             </div>
         </div>
     </nav>
-<br><br>
+    <br><br>
     <!-- Formulario de Registro -->
     <div class="d-flex justify-content-center align-items-center vh-100" style="padding-top: 60px; padding-bottom: 60px;">
         <div class="card p-4 shadow-sm" style="max-width: 500px; width: 100%; background-color: #ffffff;">

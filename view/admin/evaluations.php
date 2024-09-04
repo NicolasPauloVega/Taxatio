@@ -57,7 +57,7 @@
                         <a class="nav-link text-white" href="./results.php">Resultados</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link text-white" href="./evaluations.php">Evaluaciones</a>
+                        <a class="nav-link text-white" href="./evaluations.php">Encuestas</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="./user.php"><i class="fas fa-user"></i></a>
@@ -69,7 +69,7 @@
             </div>
         </div>
     </nav>
-
+    
     <!-- Tabla de Encuestas -->
     <div class="container my-5">
         <h1 class="mb-4 text-success text-center">Encuestas</h1>

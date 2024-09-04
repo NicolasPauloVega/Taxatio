@@ -87,6 +87,20 @@
                     </div>
 
                     <div class="mb-3">
+                        <label for="competence" class="form-label">Competencia</label>
+                        <select name="option" id="option" class="form-control text-dark border-success">
+                            <option value="" disabled selected>Selecciona el tipo de competencia del instructor</option>
+                            <option value="Transversal">Transversal</option>
+                            <option value="tecnica">Técnica</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nombre de competencia</label>
+                        <input type="text" class="form-control text-dark border-success" name="name" id="name" placeholder="Ingresa el nombre del instructor">
+                    </div>
+
+                    <div class="mb-3">
                         <input type="submit" value="Asignar" name="assign" id="assign" class="btn btn-success">
                     </div>
                 </form>

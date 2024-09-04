@@ -67,7 +67,7 @@
                 </ul>
             </div>
         </div>
-    </nav>
+    </nav><br>
 
     <!-- Formulario de Registro -->
     <div class="d-flex justify-content-center align-items-center vh-50">

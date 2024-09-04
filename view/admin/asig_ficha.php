@@ -57,10 +57,10 @@
                         <a class="nav-link text-white" href="./results.php">Resultados</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link text-white" href="./evaluations.php">Evaluaciones</a>
+                        <a class="nav-link text-white" href="./evaluations.php">Encuestas</a>
                     </li>
-                    <li class="nav-item nav-link text-white">
-                        <i class="fa-solid fa-user-tie"></i>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="./user.php"><i class="fas fa-user"></i></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="../../controller/logout.php"><i class="fas fa-sign-out-alt"></i></a>
@@ -68,7 +68,7 @@
                 </ul>
             </div>
         </div>
-    </nav><br><br>
+    </nav>
 
     <!-- Contenido de Gestión de Usuarios -->
     <div class="d-flex justify-content-center align-items-center vh-95">

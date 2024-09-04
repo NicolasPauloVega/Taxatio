@@ -57,8 +57,8 @@
                     <li class="nav-item">
                         <a class="nav-link text-white" href="./results.php">Resultados</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="./evaluations.php">Evaluaciones</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link text-white" href="./evaluations.php">Encuestas</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="./user.php"><i class="fas fa-user"></i></a>

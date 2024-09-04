@@ -98,32 +98,36 @@
                 </thead>
                 <tbody>
                     <?php
-                        $sql_ = "SELECT u.Nombre, u.Apellido, fi.Competencia, fi.Id_ficha_instructor, fa.Id_ficha_aprendiz, fi.Nombre as Nombre_instructor FROM rol r 
+                        $sql_ = "SELECT DISTINCT u.Nombre, u.Apellido, fi.Competencia, fi.Id_ficha_instructor, fa.Id_ficha_aprendiz, fi.Nombre as Nombre_instructor 
+                        FROM rol r 
                         JOIN usuario u ON r.Id_rol = u.Id_rol 
                         JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario 
                         JOIN ficha f ON fi.Id_ficha = f.Id_ficha 
                         JOIN ficha_aprendiz fa ON f.Id_ficha = fa.Id_ficha 
-                        WHERE fa.Id_ficha_aprendiz = $id ";
+                        JOIN respuesta re ON fa.Id_ficha_aprendiz = re.Id_ficha_aprendiz 
+                        JOIN pregunta p ON re.Id_pregunta = p.Id_pregunta 
+                        JOIN encuesta e ON p.Id_encuesta = e.Id_encuesta 
+                        WHERE fa.Id_ficha_aprendiz = $id AND e.Estado = 'Activo'";                    
                         $query_ = mysqli_query($connection, $sql_);
                         if ($query_){
                     ?>
-                        <?php while ($row = mysqli_fetch_array($query_)){ ?>
-                        <tr>
-                            <td><?= $row['Nombre'] . " " . $row['Apellido'] ?></td>
-                            <td><?= $row['Competencia'] ?></td>
-                            <td><?= $row['Nombre_instructor'] ?></td>
-                            <td>
-                                <a href="./evaluate_id.php?id=<?= $row['Id_ficha_instructor'];?>&aprendiz=<?= $row['Id_ficha_aprendiz'] ?>" class="btn btn-info btn-sm">
-                                    <i class="fa-solid fa-clipboard-check"></i>
-                                </a>
-                            </td>
-                        </tr>
+                            <?php while ($row = mysqli_fetch_array($query_)){ ?>
+                            <tr>
+                                <td><?= $row['Nombre'] . " " . $row['Apellido'] ?></td>
+                                <td><?= $row['Competencia'] ?></td>
+                                <td><?= $row['Nombre_instructor'] ?></td>
+                                <td>
+                                    <a href="./evaluate_id.php?id=<?= $row['Id_ficha_instructor'];?>&aprendiz=<?= $row['Id_ficha_aprendiz'] ?>" class="btn btn-info btn-sm">
+                                        <i class="fa-solid fa-clipboard-check"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                        <?php } else { ?>
+                            <tr>
+                                <td colspan="4">Instructores evaluados</td>
+                            </tr>
                         <?php } ?>
-                    <?php } else { ?>
-                        <tr>
-                            <td colspan="4">Instructores evaluados</td>
-                        </tr>
-                    <?php } ?>
                 </tbody>
             </table>
         </div>
