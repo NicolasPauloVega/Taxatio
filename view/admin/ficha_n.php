@@ -26,9 +26,9 @@
     $sql_ = "SELECT f.Numero_ficha, u.Nombre, u.Apellido, u.Tipo_documento, u.Numero_documento, u.Id_usuario, f.Nombre_ficha, r.Tipo 
             FROM rol r 
             JOIN usuario u ON r.Id_rol = u.Id_rol 
-            JOIN ficha_instructor fa ON u.Id_usuario = fa.Id_usuario 
-            JOIN ficha f ON fa.Id_ficha = f.Id_ficha 
-            WHERE u.Id_rol = 2 
+            JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario 
+            JOIN ficha f ON fi.Id_ficha = f.Id_ficha 
+            WHERE u.Id_rol = 3 
             ORDER BY f.Numero_ficha ASC";
 
     // Filtrado por número de ficha si está presente en la solicitud GET
@@ -118,7 +118,7 @@
         </div>
 
         <div class="mb-6">
-            <form action="" method="get">
+            <form action="./ficha_n.php" method="get">
                 <label for="ficha">Número de ficha</label>
                 <input type="number" name="ficha" id="ficha" class="form-control" placeholder="Ingrese número de ficha">
                 <input type="submit" value="Filtrar" class="btn btn-success mt-2">

@@ -28,10 +28,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="./home.php">Inicio</a>
+                        <a class="nav-link text-white" href="./view/home.php">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="./evaluate.php">Evaluar</a>
+                        <a class="nav-link text-white" href="./view/evaluate.php">Encuestar</a>
                     </li>
                 </ul>
             </div>
@@ -60,6 +60,7 @@
                     <input type="submit" class="btn w-100" name="login" value="Iniciar sesión" style="background-color: #2E7D32; color: #ffffff;">
                 </form>
             </div>
+            <a href="#" class="text-success" style="text-align: center;">¿Olvidate tu contraseña?</a>
         </div>
     </div>
 

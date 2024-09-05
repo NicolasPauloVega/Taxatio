@@ -68,10 +68,10 @@
                 </ul>
             </div>
         </div>
-    </nav>
+    </nav><br><br>
 
     <!-- Contenido de Gestión de Usuarios -->
-    <div class="d-flex justify-content-center align-items-center vh-95">
+    <div class="d-flex justify-content-center align-items-center vh-95 text-center">
         <div class="card p-4 shadow-sm" style="max-width: 500px; width: 100%; background-color: #ffffff;">
             <div class="card-body">
                 <h3 class="card-title text-center mb-4 text-success">Asignar ficha al aprendiz - <?php echo $row['Nombre'] . " " . $row['Apellido'] ?></h3>

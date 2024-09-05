@@ -1,79 +1,79 @@
 <?php
-///////////////////////////////// Manejo de sesiones /////////////////////////////////////////////
-// Manejo de sesiones
-session_start();
+    ///////////////////////////////// Manejo de sesiones /////////////////////////////////////////////
+    // Manejo de sesiones
+    session_start();
 
-// Verificamos si el usuario está logueado y tiene un rol diferente a administrador
-if (!isset($_SESSION['usuario']) || $_SESSION['usuario'] == '' || $_SESSION['usuario'] != 1) {
-    header('location: ../../view/home.php');
-    exit();
-}
+    // Verificamos si el usuario está logueado y tiene un rol diferente a administrador
+    if (!isset($_SESSION['usuario']) || $_SESSION['usuario'] == '' || $_SESSION['usuario'] != 1) {
+        header('location: ../../view/home.php');
+        exit();
+    }
 
-// Almacenamos la sesión
-$user = $_SESSION['usuario'];
+    // Almacenamos la sesión
+    $user = $_SESSION['usuario'];
 
-include('../../model/database.php'); // Incluir la base de datos
+    include('../../model/database.php'); // Incluir la base de datos
 
-///////////////////////////////// Paginación /////////////////////////////////////////////
-// Definir el número de resultados por página
-$results_per_page = 6;
+    ///////////////////////////////// Paginación /////////////////////////////////////////////
+    // Definir el número de resultados por página
+    $results_per_page = 6;
 
-// Obtener el número total de resultados para la primera consulta
-$query_total = "SELECT COUNT(DISTINCT f.Numero_ficha) AS total 
-                FROM rol r 
-                JOIN usuario u ON r.Id_rol = u.Id_rol 
-                JOIN ficha_aprendiz fa ON u.Id_usuario = fa.Id_usuario 
-                JOIN ficha f ON fa.Id_ficha = f.Id_ficha 
-                WHERE u.Id_rol = 2";
-$result_total = mysqli_query($connection, $query_total);
-$row_total = mysqli_fetch_assoc($result_total);
-$total_results = $row_total['total'];
+    // Obtener el número total de resultados para la primera consulta
+    $query_total = "SELECT COUNT(DISTINCT f.Numero_ficha) AS total 
+                    FROM rol r 
+                    JOIN usuario u ON r.Id_rol = u.Id_rol 
+                    JOIN ficha_aprendiz fa ON u.Id_usuario = fa.Id_usuario 
+                    JOIN ficha f ON fa.Id_ficha = f.Id_ficha 
+                    WHERE u.Id_rol = 2";
+    $result_total = mysqli_query($connection, $query_total);
+    $row_total = mysqli_fetch_assoc($result_total);
+    $total_results = $row_total['total'];
 
-// Calcular el número total de páginas
-$total_pages = ceil($total_results / $results_per_page);
+    // Calcular el número total de páginas
+    $total_pages = ceil($total_results / $results_per_page);
 
-// Determinar en qué página estamos
-$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+    // Determinar en qué página estamos
+    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
 
-// Calcular el offset para la consulta
-$start_from = ($page - 1) * $results_per_page;
+    // Calcular el offset para la consulta
+    $start_from = ($page - 1) * $results_per_page;
 
-// Modificar la consulta para aplicar la paginación
-$sql = "SELECT DISTINCT f.Numero_ficha, u.Nombre, u.Apellido, u.Tipo_documento, u.Numero_documento, u.Id_usuario, f.Nombre_ficha, r.Tipo 
-        FROM rol r 
-        JOIN usuario u ON r.Id_rol = u.Id_rol 
-        JOIN ficha_aprendiz fa ON u.Id_usuario = fa.Id_usuario 
-        JOIN ficha f ON fa.Id_ficha = f.Id_ficha 
-        WHERE u.Id_rol = 2 
-        ORDER BY f.Numero_ficha ASC 
-        LIMIT $start_from, $results_per_page";
+    // Modificar la consulta para aplicar la paginación
+    $sql = "SELECT DISTINCT f.Numero_ficha, u.Nombre, u.Apellido, u.Tipo_documento, u.Numero_documento, u.Id_usuario, f.Nombre_ficha, r.Tipo 
+            FROM rol r 
+            JOIN usuario u ON r.Id_rol = u.Id_rol 
+            JOIN ficha_aprendiz fa ON u.Id_usuario = fa.Id_usuario 
+            JOIN ficha f ON fa.Id_ficha = f.Id_ficha 
+            WHERE u.Id_rol = 2 
+            ORDER BY f.Numero_ficha ASC 
+            LIMIT $start_from, $results_per_page";
 
-// Ejecutar la consulta
-$query = mysqli_query($connection, $sql);
+    // Ejecutar la consulta
+    $query = mysqli_query($connection, $sql);
 
-// Repetir el proceso de paginación para la segunda consulta
-$query_total_ = "SELECT COUNT(DISTINCT f.Numero_ficha) AS total 
-                FROM rol r 
-                JOIN usuario u ON r.Id_rol = u.Id_rol 
-                JOIN ficha_instructor fa ON u.Id_usuario = fa.Id_usuario 
-                JOIN ficha f ON fa.Id_ficha = f.Id_ficha 
-                WHERE u.Id_rol = 3";
-$result_total_ = mysqli_query($connection, $query_total_);
-$row_total_ = mysqli_fetch_assoc($result_total_);
-$total_results_ = $row_total_['total'];
-$total_pages_ = ceil($total_results_ / $results_per_page);
-$start_from_ = ($page - 1) * $results_per_page;
+    // Repetir el proceso de paginación para la segunda consulta
+    $query_total_ = "SELECT COUNT(DISTINCT f.Numero_ficha) AS total 
+                    FROM rol r 
+                    JOIN usuario u ON r.Id_rol = u.Id_rol 
+                    JOIN ficha_instructor fa ON u.Id_usuario = fa.Id_usuario 
+                    JOIN ficha f ON fa.Id_ficha = f.Id_ficha 
+                    WHERE u.Id_rol = 3";
+    $result_total_ = mysqli_query($connection, $query_total_);
+    $row_total_ = mysqli_fetch_assoc($result_total_);
+    $total_results_ = $row_total_['total'];
+    $total_pages_ = ceil($total_results_ / $results_per_page);
+    $start_from_ = ($page - 1) * $results_per_page;
 
-$sql_ = "SELECT DISTINCT f.Numero_ficha, u.Nombre, u.Apellido, u.Tipo_documento, u.Numero_documento, u.Id_usuario, f.Nombre_ficha, r.Tipo 
-        FROM rol r 
-        JOIN usuario u ON r.Id_rol = u.Id_rol 
-        JOIN ficha_instructor fa ON u.Id_usuario = fa.Id_usuario 
-        JOIN ficha f ON fa.Id_ficha = f.Id_ficha 
-        WHERE u.Id_rol = 3 
-        ORDER BY f.Numero_ficha ASC 
-        LIMIT $start_from_, $results_per_page";
+    $sql_ = "SELECT DISTINCT f.Numero_ficha, u.Nombre, u.Apellido, u.Tipo_documento, u.Numero_documento, u.Id_usuario, f.Nombre_ficha, r.Tipo 
+            FROM rol r 
+            JOIN usuario u ON r.Id_rol = u.Id_rol 
+            JOIN ficha_instructor fa ON u.Id_usuario = fa.Id_usuario 
+            JOIN ficha f ON fa.Id_ficha = f.Id_ficha 
+            WHERE u.Id_rol = 3 
+            ORDER BY f.Numero_ficha ASC 
+            LIMIT $start_from_, $results_per_page";
 
-$query_ = mysqli_query($connection, $sql_);
+    $query_ = mysqli_query($connection, $sql_);
 ?>
 
 <!DOCTYPE html>

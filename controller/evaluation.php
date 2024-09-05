@@ -13,28 +13,45 @@
         $fecha = date("Y-m-d H:i:s");
         $estado = 'Evaluado';
 
-        // Consulta para verificar si ya existe una respuesta
-        $check_sql = "SELECT * FROM respuesta WHERE Id_ficha_instructor = $id_instructor AND Id_ficha_aprendiz = $id_aprendiz AND Id_pregunta = $id_pregunta";
-        $check_query = mysqli_query($connection, $check_sql);
+        // Realizamos la consulta para insertar la respuesta
+        $sql = "INSERT INTO respuesta (id_ficha_aprendiz, id_ficha_instructor, id_pregunta, respuesta, fecha_hora, estado) 
+        VALUES ($id_aprendiz, $id_instructor, $id_pregunta, '$test', '$fecha', '$estado')";
 
-        // Verificar si ya existe una respuesta
-        if(mysqli_num_rows($check_query) > 0) {
-            header('Location: ../view/evaluate.php');
-            exit();
+        // Ejecutamos la consulta
+        $query = mysqli_query($connection, $sql);
+
+        // Verificamos si la inserción fue exitosa
+        if($query) {
+            ?>
+            <script>
+                swal.fire({
+                    icon: 'success',
+                    title: 'Gracias por responder!',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                }).then((result) => {
+                    if (result.value) {
+                        window.location.href = './evaluations.php';
+                    }
+                });
+            </script>
+            <?php
         } else {
-            // Realizamos la consulta para insertar la respuesta
-            $sql = "INSERT INTO respuesta (id_ficha_aprendiz, id_ficha_instructor, id_pregunta, respuesta, fecha_hora, estado) 
-                    VALUES ($id_aprendiz, $id_instructor, $id_pregunta, '$test', '$fecha', '$estado')";
-
-            // Ejecutamos la consulta
-            $query = mysqli_query($connection, $sql);
-
-            // Verificamos si la inserción fue exitosa
-            if($query) {
-                header("Location: ../view/evaluate.php");
-            } else {
-                echo "<script>console.log('Respuesta incorrecta');</script>";
-            }
+            ?>
+            <script>
+                swal.fire({
+                    icon: 'error',
+                    title: 'Oh no algo salio mal!',
+                    text: 'Hubo un error desconocido porfavor intentalo de nuevo',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                }).then((result) => {
+                    if (result.value) {
+                        window.location.href = './evaluations.php';
+                    }
+                });
+            </script>
+            <?php
         }
     }
 ?>
