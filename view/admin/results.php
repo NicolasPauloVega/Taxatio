@@ -9,15 +9,41 @@
         exit();
     }
 
-    // Almacenamos la sesion
+    // Almacenamos la sesión
     $user = $_SESSION['usuario'];
 
     include('../../model/database.php'); // Incluir la base de datos
 
-    // Consulta y ejecucion
-    $sql = "SELECT * FROM usuario WHERE Id_rol = 3";
+    // Definimos la cantidad de resultados por página
+    $results_per_page = 6;
+
+    // Verificamos si existe un parámetro de página en la URL
+    if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+        $page = $_GET['page'];
+    } else {
+        $page = 1;
+    }
+
+    // Verificamos si se está buscando un nombre
+    $search_name = isset($_GET['search_name']) ? $_GET['search_name'] : '';
+
+    // Determinar el límite de inicio para la consulta SQL
+    $start_from = ($page - 1) * $results_per_page;
+
+    // Consulta para obtener el total de usuarios con rol 3 (instructores) y el filtro por nombre
+    $sql_count = "SELECT COUNT(*) AS total FROM usuario WHERE Id_rol = 3 AND Nombre LIKE '%$search_name%'";
+    $result_count = mysqli_query($connection, $sql_count);
+    $row_count = mysqli_fetch_assoc($result_count);
+    $total_records = $row_count['total'];
+
+    // Calcular el número total de páginas
+    $total_pages = ceil($total_records / $results_per_page);
+
+    // Consulta para obtener los instructores según la paginación y el filtro por nombre
+    $sql = "SELECT * FROM usuario WHERE Id_rol = 3 AND Nombre LIKE '%$search_name%' LIMIT $start_from, $results_per_page";
     $query = mysqli_query($connection, $sql);
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -68,13 +94,21 @@
         </div>
     </nav>
 
-    <!-- Contenido de Resultados -->
+    <!-- Contenido de Encuestas -->
     <div class="container my-5">
-        <h1 class="mb-4 text-success" style="text-align: center;">Encuestas por Instructores</h1>
+        <h1 class="mb-4 text-success text-center">Encuestas por Instructores</h1>
+
+        <!-- Formulario de Búsqueda -->
+        <form class="mb-4" method="GET" action="">
+            <div class="input-group">
+                <input type="text" class="form-control" name="search_name" placeholder="Buscar por nombre" value="<?= $search_name ?>">
+                <button type="submit" class="btn btn-success">Buscar</button>
+            </div>
+        </form>
 
         <!-- Lista de Instructores -->
         <div class="table-responsive">
-            <table class="table table-bordered table-hover" style="text-align: center;">
+            <table class="table table-bordered table-hover text-center">
                 <thead class="table-success">
                     <tr>
                         <th>Nombre</th>
@@ -92,10 +126,57 @@
                             </td>
                         </tr>
                     <?php endwhile; ?>
-                    <!-- Agrega más instructores según sea necesario -->
                 </tbody>
             </table>
         </div>
+
+        <!-- Paginación -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <!-- Botón de página anterior -->
+                <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
+                    <a class="page-link" href="<?= ($page > 1) ? '?page=' . ($page - 1) . '&search_name=' . $search_name : '#' ?>" aria-label="Anterior">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <!-- Números de página con ... -->
+                <?php
+                $max_links = 6;
+                $start = max(1, $page - 2);
+                $end = min($total_pages, $start + $max_links - 1);
+
+                if ($start > 1): ?>
+                    <li class="page-item"><a class="page-link" href="?page=1&search_name=<?= $search_name ?>">1</a></li>
+                    <?php if ($start > 2): ?>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    <?php endif; ?>
+                <?php endif; ?>
+
+                <!-- Mostrar las páginas del rango calculado -->
+                <?php for ($i = $start; $i <= $end; $i++): ?>
+                    <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
+                        <a class="page-link" href="?page=<?= $i ?>&search_name=<?= $search_name ?>"><?= $i ?></a>
+                    </li>
+                <?php endfor; ?>
+
+                <!-- Añadir ... después de las páginas si es necesario -->
+                <?php if ($end < $total_pages): ?>
+                    <?php if ($end < $total_pages - 1): ?>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    <?php endif; ?>
+                    <li class="page-item"><a class="page-link" href="?page=<?= $total_pages ?>&search_name=<?= $search_name ?>"><?= $total_pages ?></a></li>
+                <?php endif; ?>
+
+                <!-- Botón de página siguiente -->
+                <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : '' ?>">
+                    <a class="page-link" href="<?= ($page < $total_pages) ? '?page=' . ($page + 1) . '&search_name=' . $search_name : '#' ?>" aria-label="Siguiente">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>

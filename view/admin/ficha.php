@@ -133,7 +133,7 @@ $query_ = mysqli_query($connection, $sql_);
         <div class="mb-4">
             <a href="./users.php" class="btn btn-success">Todos</a>
             <a href="./instructor.php?id=3" class="btn btn-success">Instructor</a>
-            <a href="./aprendiz.php" class="btn btn-success">Aprendiz</a>
+            <a href="./aprendiz.php?id=2" class="btn btn-success">Aprendiz</a>
             <a href="./ficha_n.php" class="btn btn-success">Numero</a>
         </div>
 

@@ -1,6 +1,6 @@
 <?php
     ///////////////////////////////// Manejo de sesiones /////////////////////////////////////////////
-    // Manejo de sesiones
+    // Iniciamos la sesión
     session_start();
 
     // Verificamos si el usuario está logueado o no
@@ -9,31 +9,28 @@
         exit();
     }
 
-    // Almacenamos la sesion
+    // Almacenamos la sesión
     $user = $_SESSION['usuario'];
 
     ///////////////////////////////// Manejo de base de datos /////////////////////////////////////////////
     include('../model/database.php');
 
-    // Realizamos una consulta
-    $sql = "SELECT * FROM usuario u 
-        JOIN ficha_aprendiz f_a ON u.Id_usuario = f_a.Id_usuario 
-        JOIN ficha f ON f_a.Id_ficha = f.Id_ficha WHERE u.Id_usuario = '$user'
-    ";
+    // Datos aprendiz
+    $sql = "SELECT * FROM usuario WHERE Id_usuario = $user";
+    $query = mysqli_query($connection,$sql);
+    $row = mysqli_fetch_array($query);
 
-    // Ejecutamos la consulta
-    $query = mysqli_query($connection, $sql);
 
-    // Iteramos sobre la informacion
-    while($date = mysqli_fetch_array($query)):
+    // Consulta para obtener los instructores asociados con el aprendiz conectado
+    $sql_ = "SELECT DISTINCT u.Nombre, u.Apellido, fi.Competencia, fi.Id_ficha_instructor, fa.Id_ficha_aprendiz, fi.Nombre as Nombre_instructor 
+             FROM rol r 
+             JOIN usuario u ON r.Id_rol = u.Id_rol 
+             JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario 
+             JOIN ficha f ON fi.Id_ficha = f.Id_ficha 
+             JOIN ficha_aprendiz fa ON f.Id_ficha = fa.Id_ficha  
+             WHERE fa.Id_usuario = {$row['Id_usuario']}";
 
-        // Almacenamos la informacion
-        $id = $date['Id_ficha_aprendiz'];
-        $name = $date['Nombre'];
-        $last_name = $date['Apellido'];
-        $ficha = $date['Numero_ficha'];
-
-    endwhile;
+    $query_ = mysqli_query($connection, $sql_);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -83,7 +80,7 @@
 
     <!-- Instructores -->
     <div class="container my-5">
-        <h1 class="mb-4 text-success text-center">Evalua a tu instructor</h1>
+        <h1 class="mb-4 text-success text-center">Evalúa a tu instructor</h1>
 
         <!-- Tabla de Instructores -->
         <div class="table-responsive">
@@ -92,26 +89,13 @@
                     <tr>
                         <th>Nombre</th>
                         <th>Competencia</th>
-                        <th>Nombre de la competencia</th>
+                        <th>Nombre del Instructor</th>
                         <th>Evaluar</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                        $sql_ = "SELECT DISTINCT u.Nombre, u.Apellido, fi.Competencia, fi.Id_ficha_instructor, fa.Id_ficha_aprendiz, fi.Nombre as Nombre_instructor 
-                        FROM rol r 
-                        JOIN usuario u ON r.Id_rol = u.Id_rol 
-                        JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario 
-                        JOIN ficha f ON fi.Id_ficha = f.Id_ficha 
-                        JOIN ficha_aprendiz fa ON f.Id_ficha = fa.Id_ficha 
-                        JOIN respuesta re ON fa.Id_ficha_aprendiz = re.Id_ficha_aprendiz 
-                        JOIN pregunta p ON re.Id_pregunta = p.Id_pregunta 
-                        JOIN encuesta e ON p.Id_encuesta = e.Id_encuesta 
-                        WHERE fa.Id_ficha_aprendiz = $id AND e.Estado = 'Activo'";                    
-                        $query_ = mysqli_query($connection, $sql_);
-                        if ($query_){
-                    ?>
-                            <?php while ($row = mysqli_fetch_array($query_)){ ?>
+                    <?php if (mysqli_num_rows($query_) > 0) { ?>
+                        <?php while ($row = mysqli_fetch_array($query_)) { ?>
                             <tr>
                                 <td><?= $row['Nombre'] . " " . $row['Apellido'] ?></td>
                                 <td><?= $row['Competencia'] ?></td>
@@ -122,12 +106,12 @@
                                     </a>
                                 </td>
                             </tr>
-                            <?php } ?>
-                        <?php } else { ?>
-                            <tr>
-                                <td colspan="4">Instructores evaluados</td>
-                            </tr>
                         <?php } ?>
+                    <?php } else { ?>
+                        <tr>
+                            <td colspan="4">No hay instructores disponibles para evaluar.</td>
+                        </tr>
+                    <?php } ?>
                 </tbody>
             </table>
         </div>
@@ -143,5 +127,5 @@
     <script>
         history.replaceState(null, null, location.pathname);
     </script>
-    <?php
+<?php
 ?>
