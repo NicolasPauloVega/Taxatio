@@ -19,9 +19,19 @@
     $id = $_GET['id'];
     $instructor = $_GET['instructor_id'];
     
-    # Realizamos una consulta y ejecutamos la misma
+    # Realizamos una consulta y ejecutamos la misma (Cargar preguntas)
     $sql = "SELECT * FROM pregunta WHERE Id_pregunta = $id ";
     $query = mysqli_query($connection, $sql);
+    $row = mysqli_fetch_array($query);
+
+    # Realizamos una consulta y ejecutamos la misma (Cargar instructores)
+    $sql_u = "SELECT fi.Id_ficha_instructor, fa.Id_ficha_aprendiz FROM usuario u 
+    JOIN ficha_aprendiz fa ON u.Id_usuario = fa.Id_usuario 
+    JOIN ficha f ON fa.Id_ficha = f.Id_ficha 
+    JOIN ficha_instructor fi ON f.Id_ficha = fi.Id_ficha 
+    WHERE fa.Id_usuario = $user";
+    $query_u = mysqli_query($connection, $sql_u);
+    $row_u = mysqli_fetch_array($query_u);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -69,31 +79,40 @@
         </div>
     </nav><br>
 
-    <!-- Formulario de Registro -->
-    <div class="d-flex justify-content-center align-items-center vh-50">
-        <div class="card p-4 shadow-sm" style="max-width: 500px; width: 100%; background-color: #ffffff;">
-            <div class="card-body">
-                <h3 class="card-title text-center mb-4 text-success">Pregunta</h3>
+    <?php
+        $check_sql = "SELECT * FROM respuesta WHERE Id_ficha_instructor = $instructor AND Id_ficha_aprendiz = {$row_u['Id_ficha_aprendiz']} AND Id_pregunta = {$row['Id_pregunta']}";
+        $check_query = mysqli_query($connection, $check_sql);
 
-                <form action="../controller/evaluation.php" method="POST">
-                    <?php
-                        $sql_u = "SELECT fi.Id_ficha_instructor, fa.Id_ficha_aprendiz FROM usuario u 
-                        JOIN ficha_aprendiz fa ON u.Id_usuario = fa.Id_usuario 
-                        JOIN ficha f ON fa.Id_ficha = f.Id_ficha 
-                        JOIN ficha_instructor fi ON f.Id_ficha = fi.Id_ficha 
-                        WHERE fa.Id_usuario = $user";
-                        $query_u = mysqli_query($connection, $sql_u);
+        if(mysqli_num_rows($check_query) > 0){
+            ?>
+            <script>
+                swal.fire({
+                    icon: 'warning',
+                    title: 'Buen intento!',
+                    text: 'Usted ya respondio esta pregunta...',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                }).then((result) => {
+                    if (result.value) {
+                        window.location.href = './evaluate.php';
+                    }
+                });
+            </script>
+            <?php
+        } else { ?>
+        <!-- Formulario de Registro -->
+        <div class="d-flex justify-content-center align-items-center vh-50">
+            <div class="card p-4 shadow-sm" style="max-width: 500px; width: 100%; background-color: #ffffff;">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4 text-success">Pregunta</h3>
+                    
+                    <form action="../controller/evaluation.php" method="POST">
+                        <div style="display: none;">
+                            <input type="text" name="id_aprendiz" id="id_aprendiz" value="<?= $row_u['Id_ficha_aprendiz'] ?>">
+                            <input type="text" name="id_instructor" id="id_instructor" value="<?= $instructor ?>">
+                        </div>
 
-                        $row_u = mysqli_fetch_array($query_u);
-                    ?>
-                    <div style="display: none;">
-                        <input type="text" name="id_aprendiz" id="id_aprendiz" value="<?= $row_u['Id_ficha_aprendiz'] ?>">
-                        <input type="text" name="id_instructor" id="id_instructor" value="<?= $instructor ?>">
-                    </div>
-
-                    <div class="mb-3">
-                        <?php $row = mysqli_fetch_array($query); ?>
-
+                        <div class="mb-3">
                             <div style="display: none;">
                                 <input type="text" name="id_pregunta" id="id_pregunta" value="<?= $row['Id_pregunta'] ?>">
                             </div>
@@ -128,14 +147,14 @@
                                     <h1>No se encontraron mas preguntas</h1>
                                 </div>
                             <?php } ?>
-                    </div>
-                    <input type="submit" class="btn w-100" name="send" value="Enviar" style="background-color: #2E7D32; color: #ffffff;">
-                </form>
+                        </div>
+                            <input type="submit" class="btn w-100" name="send" value="Enviar" style="background-color: #2E7D32; color: #ffffff;">
+                    </form>
+                </div>
             </div>
-        </div>
-    </div><br>
-
-
+        </div><br>
+        <?php } 
+    ?>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
