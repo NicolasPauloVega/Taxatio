@@ -122,7 +122,7 @@
                             <td><?= $row['Nombre'] ?></td>
                             <td><?= $row['Apellido'] ?></td>
                             <td>
-                                <a href="./info.php?id=<?= $row['Id_usuario'] ?>" class="btn btn-info btn-smt"><i class="fa-solid fa-eye"></i></a>
+                                <a href="./info.php?id=<?= $row['Id_usuario'] ?>" class="btn btn-info btn-sm"><i class="fa-solid fa-eye"></i></a>
                             </td>
                         </tr>
                     <?php endwhile; ?>

@@ -175,12 +175,6 @@
                     </ul>
                 </nav>
             </div>
-
-        <div class="text-center mb-4">
-            <!-- Botón para Registrar un nuevo usaurio -->
-            <a href="./add_user.php" class="btn btn-success">Registrar Instructor</a>
-            <a href="./register.php" class="btn btn-success">Resgistrar Aprendiz</a>
-        </div>
     </div>
 
     <!-- Bootstrap JS -->

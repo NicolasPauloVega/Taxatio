@@ -146,6 +146,10 @@
                     <?php endif; ?>
                 </tbody>
             </table>
+            <div class="text-center">
+                <!-- Botón para Registrar un nuevo usaurio -->
+                <a href="./add_user.php" class="btn btn-success">Registrar Instructor</a>
+            </div>
         </div>
 
         <!-- Enlaces de paginación -->

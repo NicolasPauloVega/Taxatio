@@ -94,7 +94,7 @@
                         <tr>
                             <td><?= $row['Pregunta'] ?></td>
                             <td><?= $row['Tipo_pregunta'] ?></td>
-                            <td><a href="./info_i.php?id=<?= $row['Id_pregunta'] ?>&id_instructor=<?= $row_i['Id_usuario'] ?>" class="btn btn-primary"><i class="fa-solid fa-check"></i></a></td>
+                            <td><a href="./info_i.php?id=<?= $row['Id_pregunta'] ?>&id_instructor=<?= $row_i['Id_usuario'] ?>" class="btn btn-primary btn-sm"><i class="fa-solid fa-check"></i></a></td>
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
