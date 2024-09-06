@@ -63,7 +63,7 @@
                         <a class="nav-link text-white" href="./home.php">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="./evaluate.php">Encuestar</a>
+                        <a class="nav-link text-white" href="./evaluate.php">Evaluar</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="./user.php">
@@ -89,7 +89,7 @@
                     <tr>
                         <th>Nombre</th>
                         <th>Competencia</th>
-                        <th>Nombre del Instructor</th>
+                        <th>Nombre de la competencia</th>
                         <th>Evaluar</th>
                     </tr>
                 </thead>

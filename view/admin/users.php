@@ -15,7 +15,7 @@
     include('../../model/database.php'); // Incluir la base de datos
 
     // Definir el número de usuarios por página
-    $usuarios_por_pagina = 5;
+    $usuarios_por_pagina = 50;
 
     // Calcular la página actual
     if (isset($_GET['pagina']) && is_numeric($_GET['pagina'])) {
@@ -106,7 +106,7 @@
 
         <div class="mb-6">
             <a href="./instructor.php?id=3" class="btn btn-success">Instructores</a>
-            <a href="./aprendiz.php?id=2" class="btn btn-success">Aprendizes</a>
+            <a href="./aprendiz.php?id=2" class="btn btn-success">Aprendices</a>
             <a href="./ficha.php" class="btn btn-success">Ficha</a>
         </div><br>
 

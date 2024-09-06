@@ -96,7 +96,7 @@
 
     <!-- Contenido de Encuestas -->
     <div class="container my-5">
-        <h1 class="mb-4 text-success text-center">Encuestas por Instructores</h1>
+        <h1 class="mb-4 text-success text-center">Resultados por instructor</h1>
 
         <!-- Formulario de Búsqueda -->
         <form class="mb-4" method="GET" action="">
