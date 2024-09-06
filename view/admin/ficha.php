@@ -1,9 +1,8 @@
 <?php
     ///////////////////////////////// Manejo de sesiones /////////////////////////////////////////////
-    // Manejo de sesiones
     session_start();
 
-    // Verificamos si el usuario está logueado y tiene un rol diferente a administrador
+    // Verificamos si el usuario está logueado o no
     if (!isset($_SESSION['usuario']) || $_SESSION['usuario'] == '' || $_SESSION['usuario'] != 1) {
         header('location: ../../view/home.php');
         exit();
@@ -14,65 +13,46 @@
 
     include('../../model/database.php'); // Incluir la base de datos
 
-    ///////////////////////////////// Paginación /////////////////////////////////////////////
-    // Definir el número de resultados por página
-    $results_per_page = 6;
+    // Consulta general para aprendices
+    $sql = "SELECT f.Numero_ficha, u.Nombre, u.Apellido, u.Tipo_documento, u.Numero_documento, u.Id_usuario, f.Nombre_ficha, r.Tipo 
+    FROM rol r 
+    JOIN usuario u ON r.Id_rol = u.Id_rol
+    JOIN ficha_aprendiz fa ON u.Id_usuario = fa.Id_usuario 
+    JOIN ficha f ON fa.Id_ficha = f.Id_ficha  
+    WHERE u.Id_rol = 2
+    ORDER BY f.Numero_ficha ASC";
 
-    // Obtener el número total de resultados para la primera consulta
-    $query_total = "SELECT COUNT(DISTINCT f.Numero_ficha) AS total 
-                    FROM rol r 
-                    JOIN usuario u ON r.Id_rol = u.Id_rol 
-                    JOIN ficha_aprendiz fa ON u.Id_usuario = fa.Id_usuario 
-                    JOIN ficha f ON fa.Id_ficha = f.Id_ficha 
-                    WHERE u.Id_rol = 2";
-    $result_total = mysqli_query($connection, $query_total);
-    $row_total = mysqli_fetch_assoc($result_total);
-    $total_results = $row_total['total'];
-
-    // Calcular el número total de páginas
-    $total_pages = ceil($total_results / $results_per_page);
-
-    // Determinar en qué página estamos
-    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-
-    // Calcular el offset para la consulta
-    $start_from = ($page - 1) * $results_per_page;
-
-    // Modificar la consulta para aplicar la paginación
-    $sql = "SELECT DISTINCT f.Numero_ficha, u.Nombre, u.Apellido, u.Tipo_documento, u.Numero_documento, u.Id_usuario, f.Nombre_ficha, r.Tipo 
+    // Consulta general para instructores
+    $sql_ = "SELECT f.Numero_ficha, u.Nombre, u.Apellido, u.Tipo_documento, u.Numero_documento, u.Id_usuario, f.Nombre_ficha, r.Tipo 
             FROM rol r 
             JOIN usuario u ON r.Id_rol = u.Id_rol 
-            JOIN ficha_aprendiz fa ON u.Id_usuario = fa.Id_usuario 
-            JOIN ficha f ON fa.Id_ficha = f.Id_ficha 
-            WHERE u.Id_rol = 2 
-            ORDER BY f.Numero_ficha ASC 
-            LIMIT $start_from, $results_per_page";
-
-    // Ejecutar la consulta
-    $query = mysqli_query($connection, $sql);
-
-    // Repetir el proceso de paginación para la segunda consulta
-    $query_total_ = "SELECT COUNT(DISTINCT f.Numero_ficha) AS total 
-                    FROM rol r 
-                    JOIN usuario u ON r.Id_rol = u.Id_rol 
-                    JOIN ficha_instructor fa ON u.Id_usuario = fa.Id_usuario 
-                    JOIN ficha f ON fa.Id_ficha = f.Id_ficha 
-                    WHERE u.Id_rol = 3";
-    $result_total_ = mysqli_query($connection, $query_total_);
-    $row_total_ = mysqli_fetch_assoc($result_total_);
-    $total_results_ = $row_total_['total'];
-    $total_pages_ = ceil($total_results_ / $results_per_page);
-    $start_from_ = ($page - 1) * $results_per_page;
-
-    $sql_ = "SELECT DISTINCT f.Numero_ficha, u.Nombre, u.Apellido, u.Tipo_documento, u.Numero_documento, u.Id_usuario, f.Nombre_ficha, r.Tipo 
-            FROM rol r 
-            JOIN usuario u ON r.Id_rol = u.Id_rol 
-            JOIN ficha_instructor fa ON u.Id_usuario = fa.Id_usuario 
-            JOIN ficha f ON fa.Id_ficha = f.Id_ficha 
+            JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario 
+            JOIN ficha f ON fi.Id_ficha = f.Id_ficha 
             WHERE u.Id_rol = 3 
-            ORDER BY f.Numero_ficha ASC 
-            LIMIT $start_from_, $results_per_page";
+            ORDER BY f.Numero_ficha ASC";
 
+    // Filtrado por número de ficha si está presente en la solicitud GET
+    if (isset($_GET['ficha']) && !empty($_GET['ficha'])) {
+        $ficha = $_GET['ficha'];
+        $sql = "SELECT DISTINCT f.Numero_ficha, u.Nombre, u.Apellido, u.Tipo_documento, u.Numero_documento, u.Id_usuario, f.Nombre_ficha, r.Tipo 
+        FROM rol r 
+        JOIN usuario u ON r.Id_rol = u.Id_rol
+        JOIN ficha_aprendiz fa ON u.Id_usuario = fa.Id_usuario 
+        JOIN ficha f ON fa.Id_ficha = f.Id_ficha  
+        WHERE u.Id_rol = 2 AND f.Numero_ficha LIKE '%$ficha%'
+        ORDER BY f.Numero_ficha ASC";
+
+        $sql_ = "SELECT DISTINCT f.Numero_ficha, u.Nombre, u.Apellido, u.Tipo_documento, u.Numero_documento, u.Id_usuario, f.Nombre_ficha, r.Tipo 
+        FROM rol r 
+        JOIN usuario u ON r.Id_rol = u.Id_rol
+        JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario 
+        JOIN ficha f ON fi.Id_ficha = f.Id_ficha  
+        WHERE u.Id_rol = 3 AND f.Numero_ficha LIKE '%$ficha%'
+        ORDER BY f.Numero_ficha ASC";
+    }
+
+    // Ejecutar las consultas
+    $query = mysqli_query($connection, $sql);
     $query_ = mysqli_query($connection, $sql_);
 ?>
 
@@ -127,18 +107,29 @@
     </nav>
 
     <!-- Contenido de Gestión de Usuarios -->
-    <div class="container my-5 text-center">
-        <h1 class="mb-4 text-success">Gestión de Usuarios</h1>
+    <div class="container my-5">
+        <h1 class="mb-4 text-success text-center">Gestión de Usuarios</h1>
 
-        <div class="mb-4">
+        <div class="mb-3 text-center">
             <a href="./users.php" class="btn btn-success">Todos</a>
-            <a href="./instructor.php?id=3" class="btn btn-success">Instructor</a>
             <a href="./aprendiz.php?id=2" class="btn btn-success">Aprendiz</a>
-            <a href="./ficha_n.php" class="btn btn-success">Numero</a>
+            <a href="./instructor.php?id=3" class="btn btn-success">Instructores</a>
+        </div>
+
+        <div class="container my-4">
+            <form action="./ficha.php" method="get" class="d-flex flex-column align-items-start">
+                <div class="mb-3 w-100">
+                    <label for="ficha" class="form-label">Número de ficha</label>
+                    <div class="input-group">
+                        <input type="number" name="ficha" id="ficha" class="form-control" placeholder="Ingrese número de ficha" required>
+                        <button type="submit" class="btn btn-success">Filtrar</button>
+                    </div>
+                </div>
+            </form>
         </div>
 
         <!-- Tabla de Usuarios -->
-        <div class="table-responsive mb-4">
+        <div class="table-responsive mb-4 text-center">
             <table class="table table-bordered table-hover">
                 <thead class="table-success">
                     <tr>
@@ -146,8 +137,6 @@
                         <th>Nombre de formacion</th>
                         <th>Nombre</th>
                         <th>Apellido</th>
-                        <th>Tipo de documento</th>
-                        <th>Número de Documento</th>
                         <th>Rol</th>
                         <th>Acciones</th>
                     </tr>
@@ -160,8 +149,6 @@
                                 <td><?= $row['Nombre_ficha'] ?></td>
                                 <td><?= $row['Nombre'] ?></td>
                                 <td><?= $row['Apellido'] ?></td>
-                                <td><?= $row['Tipo_documento'] ?></td>
-                                <td><?= $row['Numero_documento'] ?></td>
                                 <td><?= $row['Tipo'] ?></td>
                                 <td>
                                     <a href="../../controller/delete_user.php?id=<?= $row['Id_usuario'] ?>" class="btn btn-danger btn-sm">Eliminar</a>
@@ -175,8 +162,6 @@
                                 <td><?= $row_['Nombre_ficha'] ?></td>
                                 <td><?= $row_['Nombre'] ?></td>
                                 <td><?= $row_['Apellido'] ?></td>
-                                <td><?= $row_['Tipo_documento'] ?></td>
-                                <td><?= $row_['Numero_documento'] ?></td>
                                 <td><?= $row_['Tipo'] ?></td>
                                 <td>
                                     <a href="../../controller/delete_user.php?id=<?= $row_['Id_usuario'] ?>" class="btn btn-danger btn-sm">Eliminar</a>
@@ -185,41 +170,15 @@
                         <?php endwhile; ?>
                     <?php else: ?>
                     <tr>
-                        <td colspan="8" class="text-center">Usuario no encontrado</td>
+                        <td colspan="8" class="text-center">Ficha no asignada</td>
                     </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
         </div>
 
-        <!-- Paginación -->
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
-                <!-- Botón de página anterior -->
-                <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                    <a class="page-link" href="<?= ($page > 1) ? '?page=' . ($page - 1) : '#' ?>" aria-label="Anterior">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-
-                <!-- Números de página -->
-                <?php for($i = 1; $i <= $total_pages; $i++): ?>
-                    <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
-                        <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
-                    </li>
-                <?php endfor; ?>
-
-                <!-- Botón de página siguiente -->
-                <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : '' ?>">
-                    <a class="page-link" href="<?= ($page < $total_pages) ? '?page=' . ($page + 1) : '#' ?>" aria-label="Siguiente">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Scripts de Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
