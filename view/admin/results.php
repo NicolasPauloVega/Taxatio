@@ -31,7 +31,7 @@
     $start_from = ($page - 1) * $results_per_page;
 
     // Consulta para obtener el total de usuarios con rol 3 (instructores) y el filtro por nombre
-    $sql_count = "SELECT COUNT(*) AS total FROM usuario WHERE Id_rol = 3 AND Nombre LIKE '%$search_name%'";
+    $sql_count = "SELECT COUNT(*) AS total FROM usuario u JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario JOIN ficha f ON fi.Id_ficha = f.Id_ficha WHERE u.Nombre LIKE '%$search_name%'";
     $result_count = mysqli_query($connection, $sql_count);
     $row_count = mysqli_fetch_assoc($result_count);
     $total_records = $row_count['total'];
@@ -40,8 +40,11 @@
     $total_pages = ceil($total_records / $results_per_page);
 
     // Consulta para obtener los instructores según la paginación y el filtro por nombre
-    $sql = "SELECT * FROM usuario WHERE Id_rol = 3 AND Nombre LIKE '%$search_name%' LIMIT $start_from, $results_per_page";
+    $sql = "SELECT f.Numero_ficha, f.Nombre_ficha, u.Nombre, u.Apellido, fi.Id_usuario FROM usuario u JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario JOIN ficha f ON fi.Id_ficha = f.Id_ficha WHERE u.Nombre LIKE '%$search_name%' LIMIT $start_from, $results_per_page";
     $query = mysqli_query($connection, $sql);
+
+    $sql_p = "SELECT * FROM pregunta p JOIN respuesta r ON p.Id_pregunta = r.Id_pregunta JOIN ficha_instructor fi ON r.Id_ficha_instructor = fi.Id_ficha_instructor JOIN usuario u ON fi.Id_usuario = u.Id_usuario ";
+    $query_p = mysqli_query($connection, $sql_p);
 ?>
 
 <!DOCTYPE html>
@@ -111,16 +114,18 @@
             <table class="table table-bordered table-hover text-center">
                 <thead class="table-success">
                     <tr>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
+                        <th>Formación</th>
+                        <th>Ficha</th>
+                        <th>Nombre Completo</th>
                         <th>Mostrar Satisfacción</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php while($row = mysqli_fetch_array($query)): ?>
                         <tr>
-                            <td><?= $row['Nombre'] ?></td>
-                            <td><?= $row['Apellido'] ?></td>
+                            <td><?= $row['Numero_ficha'] ?></td>
+                            <td><?= $row['Nombre_ficha'] ?></td>
+                            <td><?= $row['Nombre'] . " " . $row['Apellido'] ?></td>
                             <td>
                                 <a href="./info.php?id=<?= $row['Id_usuario'] ?>" class="btn btn-info btn-sm"><i class="fa-solid fa-eye"></i></a>
                             </td>

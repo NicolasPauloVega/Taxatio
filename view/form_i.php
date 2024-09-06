@@ -126,21 +126,21 @@
                                 <div class="mb-3">
                                     <input type="radio" name="test" id="test" value="No"> No
                                 </div>
-                            <?php } else if($row['Tipo_pregunta'] == 'Muy buena/Buena/Normal/Mala/Muy mala'){ ?>
+                            <?php } else if($row['Tipo_pregunta'] == 'Excelente/Bueno/Regular/Malo/Pesimo'){ ?>
                                 <div class="mb-3">
-                                    <input type="radio" name="test" id="test" value="Muy buena"> Muy buena
+                                    <input type="radio" name="test" id="test" value="Excelente"> Excelente
                                 </div>
                                 <div class="mb-3">
-                                    <input type="radio" name="test" id="test" value="Buena"> Buena
+                                    <input type="radio" name="test" id="test" value="Bueno"> Bueno
                                 </div>
                                 <div class="mb-3">
-                                    <input type="radio" name="test" id="test" value="Normal"> Normal
+                                    <input type="radio" name="test" id="test" value="Regular"> Regular
                                 </div>
                                 <div class="mb-3">
-                                    <input type="radio" name="test" id="test" value="Mala"> Mala
+                                    <input type="radio" name="test" id="test" value="Malo"> Malo
                                 </div>
                                 <div class="mb-3">
-                                    <input type="radio" name="test" id="test" value="Muy mala"> Muy mala
+                                    <input type="radio" name="test" id="test" value="Pesimo"> Pésimo
                                 </div>
                             <?php } else {?>
                                 <div class="mb-3">

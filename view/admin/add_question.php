@@ -96,7 +96,7 @@
                     <label for="response_type" class="form-label text-success">Tipo de Pregunta</label>
                     <select class="form-select" id="response_type" name="response_type" required>
                         <option value="" disabled selected>Selecciona el tipo de respuesta</option>
-                        <option value="Muy buena/Buena/Normal/Mala/Muy mala">Muy buena / Buena / Normal / Mala / Muy mala</option>
+                        <option value="Excelente/Bueno/Regular/Malo/Pésimo">Excelente/ Bueno/ Regular/ Malo/ Pésimo</option>
                         <option value="Si/No">Sí / No</option>
                     </select>
                 </div>

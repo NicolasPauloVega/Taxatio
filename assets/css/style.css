@@ -1,7 +1,6 @@
 #chart {
-    width: 60%;
-    height: 60%;
-    display: flex;
+    width: 50%;
+    padding: 10px;
     text-align: center;
     align-items: center;
     margin: 0px auto;

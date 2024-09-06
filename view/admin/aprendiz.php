@@ -15,7 +15,7 @@
     include('../../model/database.php'); // Incluir la base de datos
 
     // Definimos la cantidad de resultados por página
-    $results_per_page = 6;
+    $results_per_page = 50;
 
     // Verificamos si existe un parámetro de página en la URL
     if (isset($_GET['page']) && is_numeric($_GET['page'])) {

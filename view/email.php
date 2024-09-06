@@ -19,7 +19,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-success" style="padding: 1.2rem;">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="./assets/img/logo.png" alt="Logo" width="35" height="35" class="d-inline-block align-text-top">
+                <img src="../assets/img/logo.png" alt="Logo" width="35" height="35" class="d-inline-block align-text-top">
                 <span class="text-white ms-2 fs-4">Taxatio</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,25 +42,21 @@
     <div class="d-flex justify-content-center align-items-center" style="height: calc(100vh - 100px);">
         <div class="card p-4 shadow-sm" style="max-width: 400px; width: 100%; background-color: #ffffff;">
             <div class="card-body">
-                <h3 class="card-title text-center mb-4 text-success">recuperar contraseña</h3>
+                <h3 class="card-title text-center mb-4 text-success">Recuperar contraseña</h3>
                 <form action="" method="POST">
-                    <?php include('./controller/validate_user.php'); ?>
+                    <?php include '../controller/email.php' ?>
                     <div class="mb-3">
-                        <label for="user" class="form-label text-dark">Nombre</label>
-                        <input type="text" class="form-control border-success text-dark" id="user" name="user" placeholder="Nombre de usuario" required>
+                        <label for="user" class="form-label text-dark">Nombre completo</label>
+                        <input type="text" class="form-control border-success text-dark" id="name" name="name" placeholder="Nombre completo del usuario" required>
                     </div>
                     <div class="mb-3">
                         <label for="pass" class="form-label text-dark">Correo electronico</label>
-                        <input type="password" class="form-control border-success text-dark" id="pass" name="pass" placeholder="Contraseña" required>
+                        <input type="password" class="form-control border-success text-dark" id="email" name="email" placeholder="Correo electronico" required>
                     </div>
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input border-success" id="show-pass">
-                        <label class="form-check-label text-dark" for="show-pass">Mostrar contraseña</label>
-                    </div>
-                    <input type="submit" class="btn w-100" name="login" value="Iniciar sesión" style="background-color: #2E7D32; color: #ffffff;">
+                    <input type="submit" class="btn w-100" name="send" value="Enviar correo" style="background-color: #2E7D32; color: #ffffff;">
                 </form>
             </div>
-            <a href="./view/email.php" class="text-success" style="text-align: center;">¿Olvidate tu contraseña?</a>
+            <a href="../index.php" class="text-success" style="text-align: center;">volver</a>
         </div>
     </div>
 

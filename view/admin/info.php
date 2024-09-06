@@ -1,6 +1,4 @@
 <?php
-    ///////////////////////////////// Manejo de sesiones /////////////////////////////////////////////
-    // Manejo de sesiones
     session_start();
 
     // Verificamos si el usuario está logueado o no
@@ -9,36 +7,67 @@
         exit();
     }
 
-    // Almacenamos la sesion
-    $user = $_SESSION['usuario'];
+    include('../../model/database.php');
 
-    include('../../model/database.php'); // Incluir la base de datos
+    // Sanitizar el id recibido por GET
+    $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-    $id = $_GET['id'];
+    if ($id <= 0) {
+        header('location: ../../view/home.php');
+        exit();
+    }
 
-    // Consulta y ejecucion sql
-    $sql = "SELECT * FROM pregunta";
-    $sql_i = "SELECT u.Id_usuario FROM ficha_instructor fi JOIN usuario u ON fi.Id_usuario = u.Id_usuario WHERE u.Id_usuario = $id";
+    // Realizamos la consulta
+    $sql = "SELECT p.Pregunta, r.Respuesta FROM pregunta p 
+    JOIN respuesta r ON p.Id_pregunta = r.Id_pregunta 
+    JOIN ficha_instructor fi ON r.Id_ficha_instructor = fi.Id_ficha_instructor 
+    WHERE fi.Id_usuario = $id";
 
     $query = mysqli_query($connection, $sql);
-    $query_i = mysqli_query($connection, $sql_i);
 
-    $row_i = mysqli_fetch_array($query_i);
+    if (!$query) {
+        die('Error en la consulta: ' . mysqli_error($connection));
+    }
+
+    $conteo_respuestas = [];
+    $preguntas = [];
+
+    // Iteramos sobre el resultado de la consulta
+    while ($row = mysqli_fetch_assoc($query)) {
+        $respuesta = $row['Respuesta'];
+        $pregunta = $row['Pregunta'];
+
+        if (!isset($conteo_respuestas[$pregunta])) {
+            $conteo_respuestas[$pregunta] = [];
+        }
+
+        if (!isset($conteo_respuestas[$pregunta][$respuesta])) {
+            $conteo_respuestas[$pregunta][$respuesta] = 0;
+        }
+        $conteo_respuestas[$pregunta][$respuesta]++;
+    }
+
+    // Convertir los datos a formato JSON para cargarlos en el script
+    $json_data = [];
+    foreach ($conteo_respuestas as $pregunta => $respuestas) {
+        $json_data[] = [
+            'pregunta' => $pregunta,
+            'respuestas' => $respuestas
+        ];
+    }
+
+    $json_data = json_encode($json_data);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evaluaciones - Taxatio</title>
-    <!-- Bootstrap CSS -->
+    <title>Resultados - Taxatio</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Iconos de FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Sweetalert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- css -->
-     <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body class="bg-light">
     
@@ -77,29 +106,16 @@
         </div>
     </nav>
 
-    <!-- Tablas de preguntas -->
-    <div class="container my-5">
-        <h1 class="mb-4 text-success text-center">Preguntas </h1>
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover text-center">
-                <thead class="table-success">
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Tipo de respuesta</th>
-                        <th>Resultado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while($row = mysqli_fetch_array($query)): ?>
-                        <tr>
-                            <td><?= $row['Pregunta'] ?></td>
-                            <td><?= $row['Tipo_pregunta'] ?></td>
-                            <td><a href="./info_i.php?id=<?= $row['Id_pregunta'] ?>&id_instructor=<?= $row_i['Id_usuario'] ?>" class="btn btn-primary btn-sm"><i class="fa-solid fa-check"></i></a></td>
-                        </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
-        </div>
+    <div class="container mt-4">
+        <h1 class="text-center" style="color: rgb(25, 135, 84);">Resultados del instructor</h1>
+        <div id="chart"></div>
     </div>
+
+    <!-- Enviar los datos JSON a JavaScript -->
+    <script>
+        const jsonData = <?= $json_data ?>;
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/chart.js"></script>
 </body>
 </html>
