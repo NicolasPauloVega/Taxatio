@@ -62,7 +62,7 @@
                 </ul>
             </div>
         </div>
-    </nav>
+    </nav><br><br>
 
     <!-- Formulario de Registro -->
     <div class="d-flex justify-content-center align-items-center vh-100" style="padding-top: 60px; padding-bottom: 60px;">
@@ -96,6 +96,10 @@
                         <label for="rol" class="form-label text-dark">Rol</label>
                         <input type="text" name="rol" id="rol" class="form-control border-success text-dark" value="3">
                     </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label text-dark">Correo electronico</label>
+                        <input type="email" name="email" id="email" class="form-control border-success text-dark" placeholder="Ingresa el correo del instructor">
+                    </div>
                     <input type="submit" class="btn w-100" name="register" value="Registrar" style="background-color: #2E7D32; color: #ffffff;">
                 </form>
                 <div class="text-center mt-3">
@@ -103,7 +107,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div><br><br>
     
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>

@@ -63,7 +63,7 @@
             </div>
         </div>
     </nav>
-    <br><br>
+    <br><br><br>
     <!-- Formulario de Registro -->
     <div class="d-flex justify-content-center align-items-center vh-100" style="padding-top: 60px; padding-bottom: 60px;">
         <div class="card p-4 shadow-sm" style="max-width: 500px; width: 100%; background-color: #ffffff;">
@@ -93,6 +93,10 @@
                         <input type="text" class="form-control border-success text-dark" id="number_document" name="number_document" placeholder="Número de documento" required>
                     </div>
                     <div class="mb-3">
+                        <label for="correo" class="form-label text-dark">Correo electronico</label>
+                        <input type="email" class="form-control border-success text-dark" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
                         <label for="pass" class="form-label text-dark">Contraseña</label>
                         <input type="text" class="form-control border-success text-dark" id="pass" name="pass" placeholder="Ingresa tu contraseña de minimo 8 caracteres" required>
                     </div>
@@ -104,7 +108,7 @@
             </div>
         </div>
     </div>
-<br><br>
+<br><br><br>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>

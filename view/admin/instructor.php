@@ -112,6 +112,10 @@
             </div>
         </form>
 
+        <div class="input-groip mb-4">
+            <a href="./add_user.php" class="btn btn-success btn-sm">Agregar Instructor</a>
+        </div>
+
         <!-- Lista de Instructores -->
         <div class="table-responsive">
             <table class="table table-bordered table-hover">

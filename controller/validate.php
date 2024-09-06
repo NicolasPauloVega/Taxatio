@@ -5,7 +5,7 @@
     if(isset($_POST["register"]))
     {
         // Validamos si la informacion que se envia es correcta
-        if(isset($_POST["name"]) && isset($_POST["last_name"]) && isset($_POST["type_document"]) && is_numeric($_POST["number_document"]) && isset($_POST["pass"]))
+        if(isset($_POST["name"]) && isset($_POST["last_name"]) && isset($_POST["type_document"]) && is_numeric($_POST["number_document"]) && isset($_POST["pass"]) && isset($_POST['email']))
         {
             // Almacenamos la informacion
             $id_rol = 2;
@@ -14,6 +14,7 @@
             $type_document = $_POST["type_document"];
             $number_document = $_POST["number_document"];
             $pass = $_POST["pass"];
+            $email = $_POST['email'];
 
             // Verificamos si el número de documento ya existe
             $check_query = "SELECT * FROM usuario WHERE Numero_documento = '$number_document'";
@@ -40,7 +41,7 @@
                 $password = password_hash($pass, PASSWORD_DEFAULT);
 
                 // Añadimos al usuario por consulta
-                $sql = "insert into usuario(Id_usuario, Id_rol, Nombre, Apellido, Tipo_documento, Numero_documento, Contrasena) values(NULL, '$id_rol', '$name', '$last_name', '$type_document', '$number_document', '$password')";
+                $sql = "insert into usuario(Id_usuario, Id_rol, Nombre, Apellido, Tipo_documento, Numero_documento, Correo_electronico, Contrasena) values(NULL, '$id_rol', '$name', '$last_name', '$type_document', '$number_document', '$email', '$password')";
 
                 // Ejecutamos la consulta
                 $query = mysqli_query($connection, $sql);

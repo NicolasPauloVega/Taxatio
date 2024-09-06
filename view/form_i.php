@@ -126,7 +126,7 @@
                                 <div class="mb-3">
                                     <input type="radio" name="test" id="test" value="No"> No
                                 </div>
-                            <?php } else if($row['Tipo_pregunta'] == 'Excelente/Bueno/Regular/Malo/Pesimo'){ ?>
+                            <?php } else if($row['Tipo_pregunta'] == 'Excelente/Bueno/Regular/Malo/Pésimo'){ ?>
                                 <div class="mb-3">
                                     <input type="radio" name="test" id="test" value="Excelente"> Excelente
                                 </div>

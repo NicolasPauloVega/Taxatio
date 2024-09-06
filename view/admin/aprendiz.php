@@ -112,6 +112,10 @@
             </div>
         </form>
 
+        <div class="mb-4">
+            <a href="./register.php" class="btn btn-success btn-sm">Agregar aprendiz</a>
+        </div>
+
         <!-- Lista de Instructores -->
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
@@ -131,7 +135,7 @@
                             <td><?= $row['Tipo_documento'] . " - " . $row['Numero_documento'] ?></td>
                             <td>
                                 <a href="../../controller/delete_user.php?id=<?= $row['Id_usuario'] ?>" class="btn btn-danger btn-sm">Eliminar</a>
-                                <a href="./asig_ficha_i.php?id=<?= $row['Id_usuario']?>" class="btn btn-success btn-sm">Asignar ficha</a>
+                                <a href="./asig_ficha.php?id=<?= $row['Id_usuario']?>" class="btn btn-success btn-sm">Asignar ficha</a>
                             </td>
                         </tr>
                     <?php endwhile; ?>
