@@ -55,7 +55,7 @@
                                 allowOutsideClick: false,
                             }).then((result) => {
                                 if (result.value) {
-                                    window.location.href = './email.php';
+                                    window.location.href = '../index.php';
                                 }
                             });
                         </script>

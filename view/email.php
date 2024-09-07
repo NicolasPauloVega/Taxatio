@@ -44,7 +44,7 @@
             <div class="card-body">
                 <form action="" method="POST">
                     <?php include '../controller/email.php' ?>
-                    <h3 class="card-title text-success mb-3">Enviar correo</h3>
+                    <h3 class="card-title text-success mb-3">Verificacion de identidad</h3>
                     <p class="text-dark">Selecciona el tipo de documento y escribe tu número de identidad</p>
                     
                     <!-- Tipo de documento -->
@@ -65,7 +65,7 @@
                     </div>
                     
                     <!-- Botón para enviar correo -->
-                    <input type="submit" class="btn w-100" name="send" value="Enviar correo" style="background-color: #2E7D32; color: #ffffff;">
+                    <input type="submit" class="btn w-100" name="send" value="Enviar" style="background-color: #2E7D32; color: #ffffff;">
                 </form>
             </div>
             <a href="../index.php" class="text-success mt-3">Volver</a>

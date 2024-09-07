@@ -42,7 +42,7 @@
     <div class="d-flex justify-content-center align-items-center" style="height: calc(100vh - 100px);">
         <div class="card p-4 shadow-sm" style="max-width: 400px; width: 100%; background-color: #ffffff;">
             <div class="card-body">
-                <h3 class="card-title text-center mb-4 text-success">recuperar contraseña</h3>
+                <h3 class="card-title text-center mb-4 text-success">Iniciar sesion</h3>
                 <form action="" method="POST">
                     <?php include('./controller/validate_user.php'); ?>
                     <div class="mb-3">

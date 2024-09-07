@@ -41,11 +41,17 @@ if(isset($_POST['send'])){
                         allowOutsideClick: false,
                     }).then((result) => {
                         if (result.value) {
-                            window.location.href = '../index.php';
+                            window.location.href = './password.php?id={$id}';
                         }
                     });
                 </script>
             ";
         }
     }
+    ?>
+        <script>
+            history.replaceState(null,null,location.pathname);
+        </script>
+    <?php
 }
+?>
