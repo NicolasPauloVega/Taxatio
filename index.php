@@ -60,7 +60,7 @@
                     <input type="submit" class="btn w-100" name="login" value="Iniciar sesión" style="background-color: #2E7D32; color: #ffffff;">
                 </form>
             </div>
-            <a href="./view/email.php" class="text-success" style="text-align: center;">¿Olvidate tu contraseña?</a>
+            <a href="./view/email.php" class="text-success" style="text-align: center;">¿Olvidate tu contraseña? <br>Cambia tu contraseña aquí</a>
         </div>
     </div>
 

@@ -1,3 +1,13 @@
+<?php
+    include '../model/database.php';
+
+    $id = $_GET['id'];
+
+    $sql = "SELECT * FROM usuario WHERE Id_usuario = '$id' ";
+    $query = mysqli_query($connection, $sql);
+    $row = mysqli_fetch_array($query);
+    echo "<script>console.log('{$row['Id_usuario']}')</script>";
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -43,29 +53,25 @@
         <div class="card p-4 shadow-sm text-center" style="max-width: 600px; width: 100%; background-color: #ffffff;">
             <div class="card-body">
                 <form action="" method="POST">
-                    <?php include '../controller/email.php' ?>
-                    <h3 class="card-title text-success mb-3">Enviar correo</h3>
-                    <p class="text-dark">Selecciona el tipo de documento y escribe tu número de identidad</p>
-                    
-                    <!-- Tipo de documento -->
-                    <div class="mb-3">
-                        <label for="document" class="form-label text-dark">Tipo de documento</label>
-                        <select class="form-select border-success text-dark" id="document" name="document" required>
-                            <option value="" disabled selected>Seleccione su tipo de documento</option>
-                            <option value="CC">Cédula de ciudadanía</option>
-                            <option value="TI">Tarjeta de identidad</option>
-                            <option value="CE">Cédula de extranjería</option>
-                        </select>
+                    <?php include '../controller/password.php' ?>
+                    <h3 class="card-title text-success mb-3">Cambia contraseña</h3>
+
+                    <div style="display: none;">
+                        <input type="number" id="num" name="num" value="<?= $row['Id_usuario']?>">
                     </div>
                     
-                    <!-- Número de documento -->
                     <div class="mb-3">
-                        <label for="num_document" class="form-label text-dark">Número de documento</label>
-                        <input type="text" class="form-control border-success text-dark" id="num_document" name="num_document" placeholder="Ingresa tu número de documento" required>
+                        <label for="pass1" class="form-label text-dark">Contraseña</label>
+                        <input type="text" class="form-control border-success text-dark" id="pass1" name="pass1" placeholder="Ingresa la nueva contraseña">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="pass2" class="form-label text-dark">Confirmar contraseña</label>
+                        <input type="text" class="form-control border-success text-dark" id="pass2" name="pass2" placeholder="Ingresa nuevamente la nueva contraseña">
                     </div>
                     
                     <!-- Botón para enviar correo -->
-                    <input type="submit" class="btn w-100" name="send" value="Enviar correo" style="background-color: #2E7D32; color: #ffffff;">
+                    <input type="submit" class="btn w-100" name="send" value="Cambiar Contraseña" style="background-color: #2E7D32; color: #ffffff;">
                 </form>
             </div>
             <a href="../index.php" class="text-success mt-3">Volver</a>
