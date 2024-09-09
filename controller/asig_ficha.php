@@ -27,7 +27,7 @@
                             allowOutsideClick: false,
                         }).then((result) => {
                             if (result.value) {
-                                window.location.href = './users.php';
+                                window.location.href = './aprendiz.php?id=2';
                             }
                         });
                     </script>";
@@ -41,7 +41,7 @@
                             allowOutsideClick: false,
                         }).then((result) => {
                             if (result.value) {
-                                window.location.href = './users.php';
+                                window.location.href = './asig_ficha.php?id={$id}';
                             }
                         });
                     </script>";
@@ -56,7 +56,7 @@
                         allowOutsideClick: false,
                     }).then((result) => {
                         if (result.value) {
-                            window.location.href = './users.php';
+                            window.location.href = './asig_ficha.php?id={$id}';
                         }
                     });
                 </script>";

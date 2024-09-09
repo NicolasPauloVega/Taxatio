@@ -96,7 +96,7 @@
 
     <!-- Contenido de Encuestas -->
     <div class="container my-5">
-        <h1 class="mb-4 text-success text-center">Encuestas por Instructores</h1>
+        <h1 class="mb-4 text-success text-center">Gestion de usuarios (Aprendices)</h1>
 
         <div class="mb-6 text-center">
             <a href="./users.php" class="btn btn-success">Todos</a>
@@ -135,7 +135,28 @@
                             <td><?= $row['Tipo_documento'] . " - " . $row['Numero_documento'] ?></td>
                             <td>
                                 <a href="../../controller/delete_user.php?id=<?= $row['Id_usuario'] ?>" class="btn btn-danger btn-sm">Eliminar</a>
-                                <a href="./asig_ficha.php?id=<?= $row['Id_usuario']?>" class="btn btn-success btn-sm">Asignar ficha</a>
+                                <?php
+                                    $sql_a = "SELECT * FROM ficha_aprendiz WHERE Id_usuario = {$row['Id_usuario']}";
+                                    $query_a = mysqli_query($connection, $sql_a);
+
+                                    if($query_a && mysqli_num_rows($query_a) > 0){
+                                        $row_a = mysqli_fetch_array($query_a);
+
+                                        if($row_a['Asignada'] == 'Si'){
+                                            ?>
+                                            <a href="./update_.php?id=<?= $row['Id_usuario'] ?>" class="btn btn-warning btn-sm">Cambiar ficha</a>
+                                            <?php
+                                        } else {
+                                            ?>
+                                            <a href="./asig_ficha.php?id=<?= $row['Id_usuario']?>" class="btn btn-success btn-sm">Asignar ficha</a>
+                                            <?php
+                                        }
+                                    } else {
+                                        ?>
+                                        <a href="./asig_ficha.php?id=<?= $row['Id_usuario']?>" class="btn btn-success btn-sm">Asignar ficha</a>
+                                        <?php
+                                    }
+                                ?>
                             </td>
                         </tr>
                     <?php endwhile; ?>

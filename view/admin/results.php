@@ -114,18 +114,18 @@
             <table class="table table-bordered table-hover text-center">
                 <thead class="table-success">
                     <tr>
-                        <th>Formación</th>
-                        <th>Ficha</th>
                         <th>Nombre Completo</th>
+                        <th>Ficha</th>
+                        <th>Formación</th>
                         <th>Mostrar Satisfacción</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php while($row = mysqli_fetch_array($query)): ?>
                         <tr>
+                            <td><?= $row['Nombre'] . " " . $row['Apellido'] ?></td>
                             <td><?= $row['Numero_ficha'] ?></td>
                             <td><?= $row['Nombre_ficha'] ?></td>
-                            <td><?= $row['Nombre'] . " " . $row['Apellido'] ?></td>
                             <td>
                                 <a href="./info.php?id=<?= $row['Id_usuario'] ?>" class="btn btn-info btn-sm"><i class="fa-solid fa-eye"></i></a>
                             </td>

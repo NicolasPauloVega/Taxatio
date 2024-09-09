@@ -91,7 +91,7 @@
                         <select name="option" id="option" class="form-control text-dark border-success">
                             <option value="" disabled selected>Selecciona el tipo de competencia del instructor</option>
                             <option value="Transversal">Transversal</option>
-                            <option value="tecnica">Técnica</option>
+                            <option value="Tecnica">Técnica</option>
                         </select>
                     </div>
 

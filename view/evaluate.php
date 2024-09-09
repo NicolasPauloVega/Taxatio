@@ -16,7 +16,7 @@
     include('../model/database.php');
 
     // Datos aprendiz
-    $sql = "SELECT * FROM usuario WHERE Id_usuario = $user";
+    $sql = "SELECT * FROM usuario u JOIN ficha_aprendiz fa ON u.Id_usuario = fa.Id_usuario JOIN ficha f ON fa.Id_ficha = f.Id_ficha WHERE u.Id_usuario = $user";
     $query = mysqli_query($connection,$sql);
     $row = mysqli_fetch_array($query);
 
@@ -28,7 +28,7 @@
              JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario 
              JOIN ficha f ON fi.Id_ficha = f.Id_ficha 
              JOIN ficha_aprendiz fa ON f.Id_ficha = fa.Id_ficha  
-             WHERE fa.Id_usuario = {$row['Id_usuario']}";
+             WHERE fa.Id_ficha_aprendiz = {$row['Id_ficha_aprendiz']}";
 
     $query_ = mysqli_query($connection, $sql_);
 ?>

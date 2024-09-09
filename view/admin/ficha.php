@@ -108,7 +108,7 @@
 
     <!-- Contenido de Gestión de Usuarios -->
     <div class="container my-5">
-        <h1 class="mb-4 text-success text-center">Gestión de Usuarios</h1>
+        <h1 class="mb-4 text-success text-center">Gestión de Usuarios (Fichas)</h1>
 
         <div class="mb-3 text-center">
             <a href="./users.php" class="btn btn-success">Todos</a>
