@@ -27,7 +27,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evaluaciones - Taxatio</title>
+    <title>Pregunta - Taxatio</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Iconos de FontAwesome -->
@@ -74,16 +74,16 @@
 
     <!-- Tabla de Encuestas -->
     <div class="container my-5">
-        <h1 class="mb-4 text-success text-center">Evaluaciones</h1>
+        <h1 class="mb-4 text-success text-center">Preguntas</h1>
         <div class="table-responsive mb-4">
-            <table class="table table-bordered table-striped text-center">
+            <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>Pregunta</th>
                         <th>Tipo de respuesta</th>
                         <th>Trimestre</th>
                         <th>Estado</th>
-                        <th>Acciones</th>
+                        <th colspan="2">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -98,6 +98,8 @@
                         <td><?= $row['Estado'] ?></td>
                         <td>
                             <a href="./edit_question.php?id=<?= $row['Id_pregunta'] ?>" class="btn btn-warning btn-sm">Editar</a>
+                        </td>
+                        <td>
                             <a href="../../controller/delete_question.php?id=<?= $row['Id_pregunta'] ?>" class="btn btn-danger btn-sm">Eliminar</a>
                         </td>
                     </tr>

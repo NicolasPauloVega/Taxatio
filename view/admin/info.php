@@ -47,17 +47,26 @@
         $conteo_respuestas[$pregunta][$respuesta]++;
     }
 
-    // Convertir los datos a formato JSON para cargarlos en el script
+    // Calcular porcentajes
     $json_data = [];
     foreach ($conteo_respuestas as $pregunta => $respuestas) {
+        $total_respuestas = array_sum($respuestas); // Total de respuestas por pregunta
+        $respuestas_porcentajes = [];
+
+        // Calculamos el porcentaje de cada respuesta
+        foreach ($respuestas as $respuesta => $cantidad) {
+            $porcentaje = ($cantidad / $total_respuestas) * 100;
+            $respuestas_porcentajes[$respuesta] = round($porcentaje, 2); // Redondear a 2 decimales
+        }
+
         $json_data[] = [
             'pregunta' => $pregunta,
-            'respuestas' => $respuestas
+            'respuestas' => $respuestas_porcentajes
         ];
     }
 
     $json_data = json_encode($json_data);
-?>
+    ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

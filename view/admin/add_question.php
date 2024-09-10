@@ -20,7 +20,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Pregunta - Taxatio</title>
+    <title>Agregar Pregunta - Taxatio</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Iconos de FontAwesome -->
@@ -67,7 +67,7 @@
     <!-- Formulario para Crear Pregunta -->
     <div class="container my-5 d-flex justify-content-center">
         <div class="card shadow-sm p-4" style="max-width: 500px; width: 100%;">
-            <h1 class="mb-4 text-success text-center">Crear Pregunta</h1>
+            <h1 class="mb-4 text-success text-center">Agregar Pregunta</h1>
             <form action="" method="POST">
                 <?php include '../../controller/add_question.php'; ?>
                 <div class="mb-3">
@@ -96,12 +96,12 @@
                     <label for="response_type" class="form-label text-success">Tipo de Pregunta</label>
                     <select class="form-select" id="response_type" name="response_type" required>
                         <option value="" disabled selected>Selecciona el tipo de respuesta</option>
-                        <option value="Excelente/Bueno/Regular/Malo/Pésimo">Excelente/ Bueno/ Regular/ Malo/ Pésimo</option>
+                        <option value="Excelente/Bueno/Regular/Malo/Pésimo">Excelente/ Buena/ Regular/ Mala/ Pésima</option>
                         <option value="Si/No">Sí / No</option>
                     </select>
                 </div>
 
-                <input type="submit" name="save" id="save" class="btn btn-success w-100" value="Guardar">
+                <input type="submit" name="save" id="save" class="btn btn-success w-100" value="Agregar">
                 <div class="text-center mt-3">
                     <a href="./evaluations.php" class="text-success" style="text-decoration: none;">Volver</a>
                 </div>

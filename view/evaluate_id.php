@@ -19,7 +19,7 @@
     $aprendiz = $_GET['aprendiz'];
 
     // Consulta para obtener todas las preguntas
-    $sql = "SELECT * FROM pregunta";
+    $sql = "SELECT * FROM pregunta p JOIN encuesta e ON p.Id_encuesta = e.Id_encuesta WHERE e.Estado = 'Activo' ";
     $query = mysqli_query($connection, $sql);
 ?>
 <!DOCTYPE html>
@@ -27,7 +27,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encuesta - Taxatio</title>
+    <title>Preguntas - Taxatio</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Iconos de FontAwesome -->
@@ -70,7 +70,7 @@
 
 <!-- Instructores -->
 <div class="container my-5">
-    <h1 class="mb-4 text-success text-center">Evalua a tu instructor</h1>
+    <h1 class="mb-4 text-success text-center">Preguntas</h1>
 
     <!-- Tabla de Instructores -->
     <div class="table-responsive">

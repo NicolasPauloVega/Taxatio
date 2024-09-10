@@ -106,7 +106,8 @@
                 <div class="card-body">
                     <h3 class="card-title text-center mb-4 text-success">Pregunta</h3>
                     
-                    <form action="../controller/evaluation.php" method="POST">
+                    <form action="" method="POST">
+                        <?php include('../controller/evaluation.php')?>
                         <div style="display: none;">
                             <input type="text" name="id_aprendiz" id="id_aprendiz" value="<?= $row_u['Id_ficha_aprendiz'] ?>">
                             <input type="text" name="id_instructor" id="id_instructor" value="<?= $instructor ?>">
@@ -131,16 +132,16 @@
                                     <input type="radio" name="test" id="test" value="Excelente"> Excelente
                                 </div>
                                 <div class="mb-3">
-                                    <input type="radio" name="test" id="test" value="Bueno"> Bueno
+                                    <input type="radio" name="test" id="test" value="Buena"> Buena
                                 </div>
                                 <div class="mb-3">
                                     <input type="radio" name="test" id="test" value="Regular"> Regular
                                 </div>
                                 <div class="mb-3">
-                                    <input type="radio" name="test" id="test" value="Malo"> Malo
+                                    <input type="radio" name="test" id="test" value="Mala"> Mala
                                 </div>
                                 <div class="mb-3">
-                                    <input type="radio" name="test" id="test" value="Pesimo"> Pésimo
+                                    <input type="radio" name="test" id="test" value="Pesima"> Pésima
                                 </div>
                             <?php } else {?>
                                 <div class="mb-3">

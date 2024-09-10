@@ -31,7 +31,7 @@
                     allowOutsideClick: false,
                 }).then((result) => {
                     if (result.value) {
-                        window.location.href = '../../view/evaluate.php';
+                        window.location.href = './evaluate.php';
                     }
                 });
             </script>
@@ -47,7 +47,7 @@
                     allowOutsideClick: false,
                 }).then((result) => {
                     if (result.value) {
-                        window.location.href = '../../view/evaluate.php';
+                        window.location.href = '.view/evaluate.php';
                     }
                 });
             </script>

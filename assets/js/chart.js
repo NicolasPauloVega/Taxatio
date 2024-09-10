@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
         chartsContainer.appendChild(canvas);
 
         new Chart(canvas, {
-            type: 'bar', // Puedes cambiar el tipo de gráfico si lo prefieres
+            type: 'bar',
             data: {
                 labels: Object.keys(item.respuestas),
                 datasets: [{
@@ -23,6 +23,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 scales: {
                     x: {
                         beginAtZero: true
+                    },
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                const value = tooltipItem.raw;
+                                return value + '%';
+                            }
+                        }
                     }
                 }
             }
