@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cambiar contraseña - Taxatio</title>
+    <title>Recuperar contraseña - Taxatio</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Iconos de FontAwesome -->
@@ -28,10 +28,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="./view/home.php">Inicio</a>
+                        <a class="nav-link text-white" href="./home.php">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="./view/evaluate.php">Encuestar</a>
+                        <a class="nav-link text-white" href="./evaluate.php">Encuestar</a>
                     </li>
                 </ul>
             </div>
@@ -44,28 +44,13 @@
             <div class="card-body">
                 <form action="" method="POST">
                     <?php include '../controller/email.php' ?>
-                    <h3 class="card-title text-success mb-3">Verificacion de identidad</h3>
-                    <p class="text-dark">Selecciona el tipo de documento y escribe tu número de identidad</p>
-                    
-                    <!-- Tipo de documento -->
-                    <div class="mb-3">
-                        <label for="document" class="form-label text-dark">Tipo de documento</label>
-                        <select class="form-select border-success text-dark" id="document" name="document" required>
-                            <option value="" disabled selected>Seleccione su tipo de documento</option>
-                            <option value="CC">Cédula de ciudadanía</option>
-                            <option value="TI">Tarjeta de identidad</option>
-                            <option value="CE">Cédula de extranjería</option>
-                        </select>
+                    <h1 class="text-success text-center">Recuperar contraseña</h1>
+
+                    <div class="mb-4">
+                        <label for="email" class="form-label text-success">Correo Electrónico:</label>
+                        <input type="email" id="email" name="email" required class="form-control border-success">
                     </div>
-                    
-                    <!-- Número de documento -->
-                    <div class="mb-3">
-                        <label for="num_document" class="form-label text-dark">Número de documento</label>
-                        <input type="text" class="form-control border-success text-dark" id="num_document" name="num_document" placeholder="Ingresa tu número de documento" required>
-                    </div>
-                    
-                    <!-- Botón para enviar correo -->
-                    <input type="submit" class="btn w-100" name="send" value="Enviar" style="background-color: #2E7D32; color: #ffffff;">
+                    <button type="submit" name="send" class="btn btn-success form-control">Enviar</button>
                 </form>
             </div>
             <a href="../index.php" class="text-success mt-3">Volver</a>

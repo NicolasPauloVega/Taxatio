@@ -25,13 +25,13 @@
     }
 
     // Verificamos si se está buscando un nombre
-    $search_name = isset($_GET['search_name']) ? $_GET['search_name'] : '';
+    $search_number = isset($_GET['search_number']) ? $_GET['search_number'] : '';
 
     // Determinar el límite de inicio para la consulta SQL
     $start_from = ($page - 1) * $results_per_page;
 
     // Consulta para obtener el total de usuarios con rol 3 (instructores) y el filtro por nombre
-    $sql_count = "SELECT COUNT(*) AS total FROM usuario u JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario JOIN ficha f ON fi.Id_ficha = f.Id_ficha WHERE u.Nombre LIKE '%$search_name%'";
+    $sql_count = "SELECT COUNT(*) AS total FROM usuario u JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario JOIN ficha f ON fi.Id_ficha = f.Id_ficha WHERE f.Numero_ficha LIKE '%$search_number%'";
     $result_count = mysqli_query($connection, $sql_count);
     $row_count = mysqli_fetch_assoc($result_count);
     $total_records = $row_count['total'];
@@ -40,7 +40,7 @@
     $total_pages = ceil($total_records / $results_per_page);
 
     // Consulta para obtener los instructores según la paginación y el filtro por nombre
-    $sql = "SELECT f.Numero_ficha, f.Nombre_ficha, u.Nombre, u.Apellido, fi.Id_usuario FROM usuario u JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario JOIN ficha f ON fi.Id_ficha = f.Id_ficha WHERE u.Nombre LIKE '%$search_name%' LIMIT $start_from, $results_per_page";
+    $sql = "SELECT f.Numero_ficha, f.Nombre_ficha, u.Nombre, u.Apellido, fi.Id_usuario FROM usuario u JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario JOIN ficha f ON fi.Id_ficha = f.Id_ficha WHERE f.Numero_ficha LIKE '%$search_number%' LIMIT $start_from, $results_per_page";
     $query = mysqli_query($connection, $sql);
 
     $sql_p = "SELECT * FROM pregunta p JOIN respuesta r ON p.Id_pregunta = r.Id_pregunta JOIN ficha_instructor fi ON r.Id_ficha_instructor = fi.Id_ficha_instructor JOIN usuario u ON fi.Id_usuario = u.Id_usuario ";
@@ -104,7 +104,7 @@
         <!-- Formulario de Búsqueda -->
         <form class="mb-4" method="GET" action="">
             <div class="input-group">
-                <input type="text" class="form-control" name="search_name" placeholder="Buscar por nombre" value="<?= $search_name ?>">
+                <input type="text" class="form-control" name="search_number" placeholder="Buscar por ficha" value="<?= $search_number ?>">
                 <button type="submit" class="btn btn-success">Buscar</button>
             </div>
         </form>

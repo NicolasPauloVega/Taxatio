@@ -18,10 +18,11 @@
     }
 
     // Realizamos la consulta
-    $sql = "SELECT p.Pregunta, r.Respuesta FROM pregunta p 
+    $sql = "SELECT p.Pregunta, r.Respuesta FROM encuesta e 
+    JOIN pregunta p ON e.Id_encuesta = p.Id_encuesta
     JOIN respuesta r ON p.Id_pregunta = r.Id_pregunta 
     JOIN ficha_instructor fi ON r.Id_ficha_instructor = fi.Id_ficha_instructor 
-    WHERE fi.Id_usuario = $id";
+    WHERE fi.Id_usuario = $id AND e.Estado = 'Activo'";
 
     $query = mysqli_query($connection, $sql);
 
@@ -117,6 +118,7 @@
 
     <div class="container mt-4">
         <h1 class="text-center" style="color: rgb(25, 135, 84);">Resultados del instructor</h1>
+        <p class="text-center text-dark">Si no se muestran resultados estadisticos no te preocupes esto se debe a que el instructor o la instructora no ha sido encuestada</p>
         <div id="chart"></div>
     </div>
 

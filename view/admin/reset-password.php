@@ -1,12 +1,56 @@
 <?php
-    include '../model/database.php';
+    $token      = $_GET['token'];
+    $token_hash = hash("sha256", $token);
 
-    $id = $_GET['id'];
+    $mysqli = mysqli_connect('localhost', 'root', '', 'taxatio');
 
-    $sql = "SELECT * FROM usuario WHERE Id_usuario = '$id' ";
-    $query = mysqli_query($connection, $sql);
-    $row = mysqli_fetch_array($query);
-    echo "<script>console.log('{$row['Id_usuario']}')</script>";
+    $sql  = "SELECT * FROM usuario WHERE reset_token_hash = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("s", $token_hash);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $user   = $result->fetch_assoc();
+
+    if($user === null){
+        ?>
+        <script>
+            swal.fire({
+                icon: 'error',
+                title: 'El link no es valido!',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href = '../email.php';
+                }
+            });
+        </script>
+        <?php
+    }
+
+    if(strtotime($user["reset_token_expires_at"]) <= time()){
+        ?>
+        <script>
+            swal.fire({
+                icon: 'error',
+                title: 'El link ya no es valido!',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href = '../email.php';
+                }
+            });
+        </script>
+        <?php
+    }
+
+    ?>
+    <script>
+        console.log("Link valido")
+    </script>
+    <?php
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -21,7 +65,7 @@
     <!-- Sweetalert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Tu CSS personalizado -->
-    <link href="./assets/css/styles.css" rel="stylesheet">
+    <link href="../../assets/css/styles.css" rel="stylesheet">
 </head>
 <body class="bg-light">
 
@@ -29,7 +73,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-success" style="padding: 1.2rem;">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="../assets/img/logo.png" alt="Logo" width="35" height="35" class="d-inline-block align-text-top">
+                <img src="../../assets/img/logo.png" alt="Logo" width="35" height="35" class="d-inline-block align-text-top">
                 <span class="text-white ms-2 fs-4">Taxatio</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,10 +82,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="./view/home.php">Inicio</a>
+                        <a class="nav-link text-white" href="../../view/home.php">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="./view/evaluate.php">Encuestar</a>
+                        <a class="nav-link text-white" href="../../view/evaluate.php">Encuestar</a>
                     </li>
                 </ul>
             </div>
@@ -53,15 +97,15 @@
         <div class="card p-4 shadow-sm text-center" style="max-width: 600px; width: 100%; background-color: #ffffff;">
             <div class="card-body">
                 <form action="" method="POST">
-                    <?php include '../controller/password.php' ?>
+                    <?php include '../../controller/password.php' ?>
                     <h3 class="card-title text-success mb-3">Cambia contraseña</h3>
 
                     <div style="display: none;">
-                        <input type="number" id="num" name="num" value="<?= $row['Id_usuario']?>">
+                        <input type="text" name="token" value="<?= htmlspecialchars($token) ?>">
                     </div>
                     
                     <div class="mb-3">
-                        <label for="pass1" class="form-label text-dark">Contraseña</label>
+                        <label for="pass1" class="form-label text-dark">Nueva contraseña</label>
                         <input type="text" class="form-control border-success text-dark" id="pass1" name="pass1" placeholder="Ingresa la nueva contraseña">
                     </div>
 
