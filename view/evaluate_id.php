@@ -73,7 +73,7 @@
     <h1 class="mb-4 text-success text-center">Preguntas</h1>
 
     <!-- Tabla de Instructores -->
-    <div class="table-responsive">
+    <div class=".table-responsive">
         <table class="table table-bordered table-hover">
             <thead class="table-success text-center">
                 <tr>
@@ -89,70 +89,77 @@
                     <tr>
                         <td><?= $row['Pregunta'] . " (" . $row['Tipo_pregunta'] . ") " ?></td>
                         <td>
-                            <form action="../assets/js/response.js" method="post">
-                                <?php
-                                    $sql_a = "SELECT p.Id_pregunta, p.Tipo_pregunta, r.Estado FROM pregunta p JOIN respuesta r ON p.Id_pregunta = r.Id_pregunta WHERE r.Id_ficha_aprendiz = $aprendiz AND r.Id_pregunta = " . $row['Id_pregunta'] . " AND r.Id_ficha_instructor = $id;";
-                                    $query_a = mysqli_query($connection, $sql_a);
-                                    $row_a = mysqli_fetch_assoc($query_a);
-
-                                    if (mysqli_num_rows($query_a) > 0 && $row_a['Estado'] == 'Evaluado') {
-                                        echo "<p class='text-muted'>Resuelta</p>";
-                                    } else {
-                                        if ($row['Tipo_pregunta'] == 'Si/No') {
-                                            ?>
+                            <?php
+                                $sql_a = "SELECT p.Id_pregunta, p.Tipo_pregunta, r.Estado FROM pregunta p JOIN respuesta r ON p.Id_pregunta = r.Id_pregunta WHERE r.Id_ficha_aprendiz = $aprendiz AND r.Id_pregunta = " . $row['Id_pregunta'] . " AND r.Id_ficha_instructor = $id;";
+                                $query_a = mysqli_query($connection, $sql_a);
+                                $row_a = mysqli_fetch_assoc($query_a);
+                                
+                                if (mysqli_num_rows($query_a) > 0 && $row_a['Estado'] == 'Evaluado') {
+                                    echo "<p class='text-muted'>Resuelta</p>";
+                                } else {
+                                    if ($row['Tipo_pregunta'] == 'Si/No') {
+                                        ?>
+                                        <form action="" method="post">
+                                            <?php include '../controller/evaluation.php'?>
                                             <div class="mb-3">
                                                 <input type="hidden" name="id" id="id" value="<?= $row['Id_pregunta'] ?>">
                                                 <input type="hidden" name="id_i" id="id_i" value="<?= $id ?>">
                                                 <input type="hidden" name="id_a" id="id_a" value="<?= $aprendiz ?>">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="respuesta" id="Si" value="Si" required>
+                                                    <input class="form-check-input" type="radio" name="respuesta" id="respuesta" value="Si" required>
                                                     <label class="form-check-label" for="Si">Sí</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="respuesta" id="No" value="No" required>
+                                                    <input class="form-check-input" type="radio" name="respuesta" id="respuesta" value="No" required>
                                                     <label class="form-check-label" for="No">No</label>
                                                 </div>
                                             </div>
-                                            <?php
-                                        } elseif ($row['Tipo_pregunta'] == 'Excelente/Bueno/Regular/Malo/Pésimo') {
-                                            ?>
+                                            <button type="submit" name="enviar" id="enviar" class="btn btn-success btn-sm">
+                                                <i class="fas fa-check"></i> Enviar
+                                            </button>
+                                        </form>
+                                        <?php
+                                    } elseif ($row['Tipo_pregunta'] == 'Excelente/Bueno/Regular/Malo/Pésimo') {
+                                        ?>
+                                        <form action="" method="post">
+                                            <?php include '../controller/evaluation.php'?>
                                             <div class="mb-3">
                                                 <input type="hidden" name="id" id="id" value="<?= $row['Id_pregunta'] ?>">
                                                 <input type="hidden" name="id_i" id="id_i" value="<?= $id ?>">
                                                 <input type="hidden" name="id_a" id="id_a" value="<?= $aprendiz ?>">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="Excelente" id="Excelente" value="Excelente" required>
+                                                    <input class="form-check-input" type="radio" name="respuesta" id="respuesta" value="Excelente" required>
                                                     <label class="form-check-label" for="Excelente">Excelente</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="Buena" id="Buena" value="Buena" required>
+                                                    <input class="form-check-input" type="radio" name="respuesta" id="respuesta" value="Buena" required>
                                                     <label class="form-check-label" for="Buena">Buena</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="Regular" id="Regular" value="Regular" required>
+                                                    <input class="form-check-input" type="radio" name="respuesta" id="respuesta" value="Regular" required>
                                                     <label class="form-check-label" for="Regular">Regular</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="Regular" id="Mala" value="Mala" required>
+                                                    <input class="form-check-input" type="radio" name="respuesta" id="respuesta" value="Mala" required>
                                                     <label class="form-check-label" for="Mala">Mala</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="Regular" id="Pesima" value="Pesima" required>
+                                                    <input class="form-check-input" type="radio" name="respuesta" id="respuesta" value="Pesima" required>
                                                     <label class="form-check-label" for="Pesima">Pésima</label>
                                                 </div>
                                             </div>
-                                            <?php
-                                        }
+                                            <button type="submit" name="enviar" id="enviar" class="btn btn-success btn-sm">
+                                                <i class="fas fa-check"></i> Enviar
+                                            </button>
+                                        </form>
+                                        <?php
                                     }
-                                ?>
-                                <button type="submit" class="btn btn-success btn-sm">
-                                    <i class="fas fa-check"></i> Enviar
-                                </button>
-                            </form>
+                                }
+                            ?>
                         </td>
                     </tr>
                     <?php endwhile; ?>
-                <?php else: ?>
+                    <?php else: ?>
                     <tr>
                         <td colspan="2">No hay preguntas disponibles.</td>
                     </tr>

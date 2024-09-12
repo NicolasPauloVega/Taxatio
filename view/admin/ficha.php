@@ -121,7 +121,7 @@
                 <div class="mb-3 w-100">
                     <label for="ficha" class="form-label">Número de ficha</label>
                     <div class="input-group">
-                        <input type="number" name="ficha" id="ficha" class="form-control" placeholder="Ingrese número de ficha" required>
+                        <input type="text" name="ficha" id="ficha" class="form-control" placeholder="Ingrese número de ficha" value="<?= isset($_GET['ficha']) ? $_GET['ficha'] : '' ?>" required>
                         <button type="submit" class="btn btn-success">Filtrar</button>
                     </div>
                 </div>

@@ -97,9 +97,9 @@
                     <div class="col-md-4 mb-4">
                         <div class="card text-center shadow-sm border-success">
                             <div class="card-body">
-                                <h5 class="card-title text-success">Administrar Evaluaciones</h5>
-                                <p class="card-text">Configura las evaluaciones disponibles en la plataforma. Añade o modifica preguntas y respuestas para asegurar la relevancia y precisión de las evaluaciones.</p>
-                                <a href="./evaluations.php" class="btn btn-success">Administrar Evaluaciones</a>
+                                <h5 class="card-title text-success">Administrar Encuestas</h5>
+                                <p class="card-text">Configura las encuestas disponibles en la plataforma. Añade o modifica preguntas y respuestas para asegurar la relevancia y precisión de las evaluaciones.</p>
+                                <a href="./evaluations.php" class="btn btn-success">Administrar Encuestas</a>
                             </div>
                         </div>
                     </div>

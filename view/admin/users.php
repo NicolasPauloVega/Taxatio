@@ -9,7 +9,7 @@
         exit();
     }
 
-    // Almacenamos la sesion
+    // Almacenamos la sesión
     $user = $_SESSION['usuario'];
 
     include('../../model/database.php'); // Incluir la base de datos
@@ -27,14 +27,31 @@
     // Calcular el OFFSET para la consulta SQL
     $offset = ($pagina_actual - 1) * $usuarios_por_pagina;
 
-    // Realizamos la consulta con LIMIT y OFFSET
-    $sql = "SELECT * FROM usuario JOIN rol ON usuario.Id_rol = rol.Id_rol WHERE rol.Id_rol != 1 ORDER BY Id_usuario ASC LIMIT $usuarios_por_pagina OFFSET $offset";
+    // Filtro por número de documento
+    $filtro_documento = '';
+    if (isset($_GET['documento']) && !empty($_GET['documento'])) {
+        $filtro_documento = $_GET['documento'];
+    }
+
+    // Consulta SQL con filtro de documento si se ha proporcionado
+    $sql = "SELECT * FROM usuario 
+            JOIN rol ON usuario.Id_rol = rol.Id_rol 
+            WHERE rol.Id_rol != 1";
+
+    if ($filtro_documento != '') {
+        $sql .= " AND Numero_documento LIKE '%$filtro_documento%'";
+    }
+
+    $sql .= " ORDER BY Id_usuario ASC LIMIT $usuarios_por_pagina OFFSET $offset";
 
     // Ejecutar la consulta
     $query = mysqli_query($connection, $sql);
 
-    // Contar el número total de registros
-    $total_usuarios_sql = "SELECT COUNT(*) AS total FROM usuario";
+    // Contar el número total de registros (sin paginación)
+    $total_usuarios_sql = "SELECT COUNT(*) AS total FROM usuario WHERE 1";
+    if ($filtro_documento != '') {
+        $total_usuarios_sql .= " AND Numero_documento LIKE '%$filtro_documento%'";
+    }
     $total_usuarios_result = mysqli_query($connection, $total_usuarios_sql);
     $total_usuarios = mysqli_fetch_assoc($total_usuarios_result)['total'];
 
@@ -110,6 +127,14 @@
             <a href="./ficha.php" class="btn btn-success">Ficha</a>
         </div><br>
 
+        <!-- Filtro de Búsqueda por Número de Documento -->
+        <form method="GET" action="" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="documento" class="form-control" placeholder="Buscar por número de documento" value="<?= isset($_GET['documento']) ? $_GET['documento'] : '' ?>">
+                <button class="btn btn-success" type="submit">Buscar</button>
+            </div>
+        </form>
+
         <!-- Tabla de Usuarios -->
         <div class="table-responsive mb-4">
             <table class="table table-bordered table-hover">
@@ -117,8 +142,7 @@
                     <tr>
                         <th>Nombre</th>
                         <th>Apellido</th>
-                        <th>Tipo de documento</th>
-                        <th>Número de Documento</th>
+                        <th>Documento</th>
                         <th>Rol</th>
                         <th>Acciones</th>
                     </tr>
@@ -131,8 +155,7 @@
                     <tr>
                         <td><?= $row['Nombre'] ?></td>
                         <td><?= $row['Apellido'] ?></td>
-                        <td><?= $row['Tipo_documento'] ?></td>
-                        <td><?= $row['Numero_documento'] ?></td>
+                        <td><?= $row['Tipo_documento'] ?> - <?= $row['Numero_documento'] ?></td>
                         <td><?= $row['Tipo'] ?></td>
                         <td>
                             <a href="../../controller/delete_user.php?id=<?= $row['Id_usuario'] ?>" class="btn btn-danger btn-sm">Eliminar</a>
@@ -168,13 +191,13 @@
                         <li class="page-item disabled"><span class="page-link">...</span></li>
                     <?php endif; ?>
                     <li class="page-item"><a class="page-link" href="?pagina=<?= $total_paginas ?>"><?= $total_paginas ?></a></li>
-                    <?php endif; ?>
-                        <?php if($pagina_actual < $total_paginas): ?>
-                            <li class="page-item"><a class="page-link" href="?pagina=<?= $pagina_actual + 1 ?>">Siguiente</a></li>
-                        <?php endif; ?>
-                    </ul>
-                </nav>
-            </div>
+                <?php endif; ?>
+
+                <?php if($pagina_actual < $total_paginas): ?>
+                    <li class="page-item"><a class="page-link" href="?pagina=<?= $pagina_actual + 1 ?>">Siguiente</a></li>
+                <?php endif; ?>
+            </ul>
+        </nav>
     </div>
 
     <!-- Bootstrap JS -->

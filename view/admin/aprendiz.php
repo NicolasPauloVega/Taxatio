@@ -31,7 +31,7 @@
     $start_from = ($page - 1) * $results_per_page;
 
     // Consulta para obtener el total de usuarios con rol 3 (instructores) y el filtro por nombre
-    $sql_count = "SELECT COUNT(*) AS total FROM usuario u JOIN rol r ON u.Id_rol = r.Id_rol WHERE u.Id_rol = 2 AND Nombre LIKE '%$search_name%'";
+    $sql_count = "SELECT COUNT(*) AS total FROM usuario u JOIN rol r ON u.Id_rol = r.Id_rol WHERE u.Id_rol = 2 AND Numero_documento LIKE '%$search_name%'";
     $result_count = mysqli_query($connection, $sql_count);
     $row_count = mysqli_fetch_assoc($result_count);
     $total_records = $row_count['total'];
@@ -40,7 +40,7 @@
     $total_pages = ceil($total_records / $results_per_page);
 
     // Consulta para obtener los instructores según la paginación y el filtro por nombre
-    $sql = "SELECT * FROM usuario u JOIN rol r ON u.Id_rol = r.Id_rol WHERE u.Id_rol = 2 AND Nombre LIKE '%$search_name%' LIMIT $start_from, $results_per_page";
+    $sql = "SELECT * FROM usuario u JOIN rol r ON u.Id_rol = r.Id_rol WHERE u.Id_rol = 2 AND Numero_documento LIKE '%$search_name%' LIMIT $start_from, $results_per_page";
     $query = mysqli_query($connection, $sql);
 ?>
 
@@ -107,7 +107,7 @@
         <!-- Formulario de Búsqueda -->
         <form class="mb-4" method="GET" action="">
             <div class="input-group">
-                <input type="text" class="form-control" name="search_name" placeholder="Buscar por nombre" value="<?= $search_name ?>">
+                <input type="text" class="form-control" name="search_name" placeholder="Buscar por Documento" value="<?= $search_name ?>">
                 <button type="submit" class="btn btn-success">Buscar</button>
             </div>
         </form>

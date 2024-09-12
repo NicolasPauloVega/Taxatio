@@ -40,7 +40,13 @@
     $total_pages = ceil($total_records / $results_per_page);
 
     // Consulta para obtener los instructores según la paginación y el filtro por nombre
-    $sql = "SELECT f.Numero_ficha, f.Nombre_ficha, u.Nombre, u.Apellido, fi.Id_usuario FROM usuario u JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario JOIN ficha f ON fi.Id_ficha = f.Id_ficha WHERE f.Numero_ficha LIKE '%$search_number%' LIMIT $start_from, $results_per_page";
+    $sql = "SELECT f.Numero_ficha, f.Nombre_ficha, u.Nombre, u.Apellido, fi.Id_usuario 
+        FROM usuario u 
+        JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario 
+        JOIN ficha f ON fi.Id_ficha = f.Id_ficha 
+        WHERE f.Numero_ficha LIKE '%$search_number%' 
+        OR u.Numero_documento LIKE '%$search_number%' 
+        LIMIT $start_from, $results_per_page";
     $query = mysqli_query($connection, $sql);
 
     $sql_p = "SELECT * FROM pregunta p JOIN respuesta r ON p.Id_pregunta = r.Id_pregunta JOIN ficha_instructor fi ON r.Id_ficha_instructor = fi.Id_ficha_instructor JOIN usuario u ON fi.Id_usuario = u.Id_usuario ";
@@ -104,7 +110,7 @@
         <!-- Formulario de Búsqueda -->
         <form class="mb-4" method="GET" action="">
             <div class="input-group">
-                <input type="text" class="form-control" name="search_number" placeholder="Buscar por ficha" value="<?= $search_number ?>">
+                <input type="text" class="form-control" name="search_number" placeholder="Buscar por ficha o por numero de documento" value="<?= $search_number ?>">
                 <button type="submit" class="btn btn-success">Buscar</button>
             </div>
         </form>
@@ -138,44 +144,39 @@
         <!-- Paginación -->
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
-                <!-- Botón de página anterior -->
                 <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                    <a class="page-link" href="<?= ($page > 1) ? '?page=' . ($page - 1) . '&search_name=' . $search_name : '#' ?>" aria-label="Anterior">
+                    <a class="page-link" href="<?= ($page > 1) ? '?page=' . ($page - 1) . '&search_number=' . $search_number : '#' ?>" aria-label="Anterior">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
 
-                <!-- Números de página con ... -->
                 <?php
                 $max_links = 6;
                 $start = max(1, $page - 2);
                 $end = min($total_pages, $start + $max_links - 1);
 
                 if ($start > 1): ?>
-                    <li class="page-item"><a class="page-link" href="?page=1&search_name=<?= $search_name ?>">1</a></li>
+                    <li class="page-item"><a class="page-link" href="?page=1&search_number=<?= $search_number ?>">1</a></li>
                     <?php if ($start > 2): ?>
                         <li class="page-item disabled"><span class="page-link">...</span></li>
                     <?php endif; ?>
                 <?php endif; ?>
 
-                <!-- Mostrar las páginas del rango calculado -->
                 <?php for ($i = $start; $i <= $end; $i++): ?>
                     <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
-                        <a class="page-link" href="?page=<?= $i ?>&search_name=<?= $search_name ?>"><?= $i ?></a>
+                        <a class="page-link" href="?page=<?= $i ?>&search_number=<?= $search_number ?>"><?= $i ?></a>
                     </li>
                 <?php endfor; ?>
 
-                <!-- Añadir ... después de las páginas si es necesario -->
                 <?php if ($end < $total_pages): ?>
                     <?php if ($end < $total_pages - 1): ?>
                         <li class="page-item disabled"><span class="page-link">...</span></li>
                     <?php endif; ?>
-                    <li class="page-item"><a class="page-link" href="?page=<?= $total_pages ?>&search_name=<?= $search_name ?>"><?= $total_pages ?></a></li>
+                    <li class="page-item"><a class="page-link" href="?page=<?= $total_pages ?>&search_number=<?= $search_number ?>"><?= $total_pages ?></a></li>
                 <?php endif; ?>
 
-                <!-- Botón de página siguiente -->
                 <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : '' ?>">
-                    <a class="page-link" href="<?= ($page < $total_pages) ? '?page=' . ($page + 1) . '&search_name=' . $search_name : '#' ?>" aria-label="Siguiente">
+                    <a class="page-link" href="<?= ($page < $total_pages) ? '?page=' . ($page + 1) . '&search_number=' . $search_number : '#' ?>" aria-label="Siguiente">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
