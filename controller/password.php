@@ -1,8 +1,8 @@
 <?php
     if(isset($_POST['send'])){
         if(isset($_POST['token']) && isset($_POST['pass1']) && isset($_POST['pass2'])){
-            $pass1 = $_POST['pass1'];
-            $pass2 = $_POST['pass2'];
+            $pass = $_POST['pass1'];
+            $pass_confirm = $_POST['pass2'];
 
             $token      = $_POST['token'];
             $token_hash = hash("sha256", $token);
@@ -60,8 +60,8 @@
             if($pass == $pass_confirm){
                 $password = password_hash($pass, PASSWORD_DEFAULT);
 
-                $sql = "UPDATE usuario SET Contrasena = '$password' WHERE reset_token_hash = $token_hash";
-                $query = mysqli_query($connection, $sql);
+                $sql = "UPDATE usuario SET Contrasena = '$password' WHERE reset_token_hash = '$token_hash'";
+                $query = mysqli_query($mysqli, $sql);
 
                 if($query){
                     echo "
@@ -74,7 +74,7 @@
                                 allowOutsideClick: false,
                             }).then((result) => {
                                 if (result.value) {
-                                    window.location.href = '../index.php';
+                                    window.location.href = '../../index.php';
                                 }
                             });
                         </script>
@@ -103,5 +103,8 @@
             history.replaceState(null,null,location.pathname);
         </script>
         <?php
+    } else {
+        header('location: ../../index.php');
+        exit();
     }
 ?>

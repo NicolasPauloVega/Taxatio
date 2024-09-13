@@ -119,7 +119,7 @@
                                             </button>
                                         </form>
                                         <?php
-                                    } elseif ($row['Tipo_pregunta'] == 'Excelente/Bueno/Regular/Malo/Pésimo') {
+                                    } elseif ($row['Tipo_pregunta'] == 'Excelente/Buena/Regular/Mala/Pésima') {
                                         ?>
                                         <form action="" method="post">
                                             <?php include '../controller/evaluation.php'?>

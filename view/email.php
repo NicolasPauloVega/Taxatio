@@ -48,7 +48,7 @@
 
                     <div class="mb-4">
                         <label for="email" class="form-label text-success">Correo Electrónico:</label>
-                        <input type="email" id="email" name="email" required class="form-control border-success">
+                        <input type="email" id="email" name="email" required class="form-control border-success" placeholder="Ingresa tu correo electronico porfavor">
                     </div>
                     <button type="submit" name="send" class="btn btn-success form-control">Enviar</button>
                 </form>
