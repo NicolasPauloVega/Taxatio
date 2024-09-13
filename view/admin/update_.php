@@ -15,7 +15,7 @@
 
     include '../../model/database.php';
 
-    $sql = "SELECT fa.Id_ficha_aprendiz, fa.Id_usuario, fa.Id_ficha, f.Numero_ficha FROM ficha_aprendiz fa JOIN ficha f ON fa.Id_ficha = f.Id_ficha WHERE fa.Id_usuario = '$id' ";
+    $sql = "SELECT fa.Id_ficha_aprendiz, fa.Id_usuario, fa.Id_ficha, f.Numero_ficha, fa.Id_usuario FROM ficha_aprendiz fa JOIN ficha f ON fa.Id_ficha = f.Id_ficha WHERE fa.Id_usuario = '$id' ";
     $query = mysqli_query($connection, $sql);
     $row = mysqli_fetch_array($query);
 ?>

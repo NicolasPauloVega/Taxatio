@@ -3,7 +3,7 @@ include '../../model/database.php';
 
 if (isset($_POST['update'])) {
     if (isset($_POST['ficha_aprendiz']) && isset($_POST['user']) && isset($_POST['num'])) {
-        $id = $_POST['ficha_instructor'];
+        $id = $_POST['ficha_aprendiz'];
         $user = $_POST['user'];
         $num = $_POST['num'];
 
@@ -12,7 +12,7 @@ if (isset($_POST['update'])) {
         $row = mysqli_fetch_array($query);
 
         if ($row) {
-            $update = "UPDATE ficha_instructor SET Id_ficha = '{$row['Id_ficha']}' WHERE Id_ficha_instructor = '$id'";
+            $update = "UPDATE ficha_aprendiz SET Id_ficha = '{$row['Id_ficha']}' WHERE Id_ficha_aprendiz = '$id'";
                        
             $update_sql = mysqli_query($connection, $update);
 
