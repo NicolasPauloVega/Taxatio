@@ -1,7 +1,6 @@
 <?php
     session_start();
 
-    // Verificamos si el usuario está logueado o no
     if (!isset($_SESSION['usuario']) || $_SESSION['usuario'] == '' || $_SESSION['usuario'] != 1) {
         header('location: ../../view/home.php');
         exit();
@@ -9,20 +8,13 @@
 
     include('../../model/database.php');
 
-    // Sanitizar el id recibido por GET
-    $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+    $id = isset($_GET['id']);
 
-    if ($id <= 0) {
-        header('location: ../../view/home.php');
-        exit();
-    }
-
-    // Realizamos la consulta
     $sql = "SELECT p.Pregunta, r.Respuesta FROM encuesta e 
     JOIN pregunta p ON e.Id_encuesta = p.Id_encuesta
     JOIN respuesta r ON p.Id_pregunta = r.Id_pregunta 
     JOIN ficha_instructor fi ON r.Id_ficha_instructor = fi.Id_ficha_instructor 
-    WHERE fi.Id_usuario = $id AND e.Estado = 'Activo'";
+    WHERE fi.Id_ficha_instructor = $id AND e.Estado = 'Activo'";
 
     $query = mysqli_query($connection, $sql);
 
@@ -33,7 +25,6 @@
     $conteo_respuestas = [];
     $preguntas = [];
 
-    // Iteramos sobre el resultado de la consulta
     while ($row = mysqli_fetch_assoc($query)) {
         $respuesta = $row['Respuesta'];
         $pregunta = $row['Pregunta'];
@@ -48,7 +39,6 @@
         $conteo_respuestas[$pregunta][$respuesta]++;
     }
 
-    // Calcular porcentajes
     $json_data = [];
     foreach ($conteo_respuestas as $pregunta => $respuestas) {
         $total_respuestas = array_sum($respuestas); // Total de respuestas por pregunta
@@ -116,12 +106,12 @@
         </div>
     </nav>
 
-    <div class="container mt-4">
-        <h1 class="text-center" style="color: rgb(25, 135, 84);">Resultados del instructor</h1>
-        <p class="text-center text-dark">Si no se muestran resultados estadisticos no te preocupes esto se debe a que el instructor o la instructora no ha sido encuestada</p>
+    <div class="container mt-4 text-center">
+        <h1 style="color: rgb(25, 135, 84);">Resultados del instructor</h1>
+        <p>Si no se muestran resultados estadisticos no te preocupes esto se debe a que el instructor o la instructora no ha sido encuestada</p>
+        <a href="./results.php" class="btn btn-success btn-sm">Volver</a>
         <div id="chart"></div>
     </div>
-
     <!-- Enviar los datos JSON a JavaScript -->
     <script>
         const jsonData = <?= $json_data ?>;

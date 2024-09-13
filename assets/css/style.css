@@ -1,7 +1,10 @@
 #chart {
-    width: 70%;
-    padding: 10px;
+    width: 80%;
+    max-width: 1200px;
+    height: 500px;
+    padding: 20px;
     text-align: center;
-    align-items: center;
     margin: 0px auto;
+    justify-content: center;
+    align-items: center;
 }

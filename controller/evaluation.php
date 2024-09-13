@@ -22,7 +22,7 @@ if(isset($_POST['enviar'])){
 
             if($query_add){
                 echo "<script>
-                    window.location.href = './evaluate_id.php?id=".$id_instructor."&&aprendiz=".$id_aprendiz."';
+                    window.location.href = './evaluate_id.php?id=".$id_instructor."&aprendiz=".$id_aprendiz."';
                 </script>";
             }else{
                 echo "<script>console.log('Fallo en el envio: ". mysqli_error($connection) . "')</script>";

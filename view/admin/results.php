@@ -1,21 +1,18 @@
 <?php
     ///////////////////////////////// Manejo de sesiones /////////////////////////////////////////////
-    // Manejo de sesiones
     session_start();
 
-    // Verificamos si el usuario está logueado o no
     if (!isset($_SESSION['usuario']) || $_SESSION['usuario'] == '' || $_SESSION['usuario'] != 1) {
         header('location: ../../view/home.php');
         exit();
     }
 
-    // Almacenamos la sesión
     $user = $_SESSION['usuario'];
 
     include('../../model/database.php'); // Incluir la base de datos
 
     // Definimos la cantidad de resultados por página
-    $results_per_page = 6;
+    $results_per_page = 50;
 
     // Verificamos si existe un parámetro de página en la URL
     if (isset($_GET['page']) && is_numeric($_GET['page'])) {
@@ -24,33 +21,26 @@
         $page = 1;
     }
 
-    // Verificamos si se está buscando un nombre
-    $search_number = isset($_GET['search_number']) ? $_GET['search_number'] : '';
+    // Verificamos si se están buscando la ficha o el documento
+    $search_number_ficha = isset($_GET['search_number_ficha']) ? $_GET['search_number_ficha'] : '';
+    $search_number_documento = isset($_GET['search_number_documento']) ? $_GET['search_number_documento'] : '';
 
     // Determinar el límite de inicio para la consulta SQL
     $start_from = ($page - 1) * $results_per_page;
 
-    // Consulta para obtener el total de usuarios con rol 3 (instructores) y el filtro por nombre
-    $sql_count = "SELECT COUNT(*) AS total FROM usuario u JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario JOIN ficha f ON fi.Id_ficha = f.Id_ficha WHERE f.Numero_ficha LIKE '%$search_number%'";
+    // Construir la consulta SQL según los filtros
+    $sql_count = "SELECT COUNT(*) AS total FROM usuario u JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario JOIN ficha f ON fi.Id_ficha = f.Id_ficha WHERE f.Numero_ficha LIKE '%$search_number_ficha%' AND u.Numero_documento LIKE '%$search_number_documento%'";
+
     $result_count = mysqli_query($connection, $sql_count);
     $row_count = mysqli_fetch_assoc($result_count);
     $total_records = $row_count['total'];
 
     // Calcular el número total de páginas
     $total_pages = ceil($total_records / $results_per_page);
+    // Consulta para obtener los instructores según la paginación y los filtros
+    $sql = "SELECT fi.Nombre AS Competencia, f.Numero_ficha, fi.Competencia as Nombre_competencia, fi.Id_usuario, u.Nombre as Nombre, u.Apellido as Apellido, r.Respuesta AS Tipo_Respuesta, COUNT(r.Respuesta) AS Total_Respuestas, u.Tipo_documento, u.Numero_documento, f.Nombre_ficha as Formacion, p.Pregunta FROM respuesta r JOIN ficha_instructor fi ON r.Id_ficha_instructor = fi.Id_ficha_instructor JOIN ficha f ON fi.Id_ficha = f.Id_ficha JOIN pregunta p ON r.Id_pregunta = p.Id_pregunta JOIN usuario u ON fi.Id_usuario = u.Id_usuario WHERE p.Tipo_pregunta IN ('Si/No', 'Excelente/buena/Regular/Mala/Pesima') AND f.Numero_ficha LIKE '%$search_number_ficha%' AND u.Numero_documento LIKE '%$search_number_documento%' GROUP BY fi.Nombre, r.Respuesta, r.Id_pregunta ORDER BY fi.Nombre, r.Id_ficha_instructor, r.Id_pregunta ASC LIMIT $start_from, $results_per_page";
 
-    // Consulta para obtener los instructores según la paginación y el filtro por nombre
-    $sql = "SELECT f.Numero_ficha, f.Nombre_ficha, u.Nombre, u.Apellido, fi.Id_usuario 
-        FROM usuario u 
-        JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario 
-        JOIN ficha f ON fi.Id_ficha = f.Id_ficha 
-        WHERE f.Numero_ficha LIKE '%$search_number%' 
-        OR u.Numero_documento LIKE '%$search_number%' 
-        LIMIT $start_from, $results_per_page";
     $query = mysqli_query($connection, $sql);
-
-    $sql_p = "SELECT * FROM pregunta p JOIN respuesta r ON p.Id_pregunta = r.Id_pregunta JOIN ficha_instructor fi ON r.Id_ficha_instructor = fi.Id_ficha_instructor JOIN usuario u ON fi.Id_usuario = u.Id_usuario ";
-    $query_p = mysqli_query($connection, $sql_p);
 ?>
 
 <!DOCTYPE html>
@@ -109,34 +99,47 @@
 
         <!-- Formulario de Búsqueda -->
         <form class="mb-4" method="GET" action="">
-            <div class="input-group">
-                <input type="text" class="form-control" name="search_number" placeholder="Buscar por ficha o por numero de documento" value="<?= $search_number ?>">
-                <button type="submit" class="btn btn-success">Buscar</button>
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="search_number_ficha" placeholder="Buscar por número de ficha" value="<?= $search_number_ficha ?>">
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="search_number_documento" placeholder="Buscar por número de documento" value="<?= $search_number_documento ?>">
+                </div>
+                <div class="col-md-12 mt-2">
+                    <button type="submit" class="btn btn-success w-100">Buscar</button>
+                </div>
             </div>
         </form>
 
         <!-- Lista de Instructores -->
         <div class="table-responsive">
-            <table class="table table-bordered table-hover text-center">
-                <thead class="table-success">
+            <table class="table table-bordered table-hover">
+                <thead class="table-success text-center">
                     <tr>
-                        <th>Nombre Completo</th>
                         <th>Ficha</th>
                         <th>Formación</th>
-                        <th>Mostrar Satisfacción</th>
+                        <th>Nombre</th>
+                        <th>Documento</th>
+                        <th>Competencia</th>
+                        <th>Pregunta</th>
+                        <th>Respuesta</th>
+                        <th>Vista general</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php while($row = mysqli_fetch_array($query)): ?>
+                    <?php while($row = mysqli_fetch_array($query)) { ?>
                         <tr>
-                            <td><?= $row['Nombre'] . " " . $row['Apellido'] ?></td>
-                            <td><?= $row['Numero_ficha'] ?></td>
-                            <td><?= $row['Nombre_ficha'] ?></td>
-                            <td>
-                                <a href="./info.php?id=<?= $row['Id_usuario'] ?>" class="btn btn-info btn-sm"><i class="fa-solid fa-eye"></i></a>
-                            </td>
+                            <td><?php echo $row['Numero_ficha']?></td>
+                            <td><?php echo $row['Formacion']?></td>
+                            <td><?php echo $row['Nombre']." ".$row['Apellido']?></td>
+                            <td><?php echo $row['Tipo_documento']." - ".$row['Numero_documento']?></td>
+                            <td><?php echo $row['Nombre_competencia'] . " (".$row['Competencia'].")"?></td>
+                            <td><?php echo $row['Pregunta']?></td>
+                            <td><?php echo $row['Tipo_Respuesta'] . ":" . $row['Total_Respuestas'] ?></td>
+                            <td><a href="./info.php?id=<?= $row['Id_ficha_instructor'] ?>" class="btn btn-info btn-sm"><i class="fa-solid fa-eye"></i></a></td>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php } ?>
                 </tbody>
             </table>
         </div>
@@ -145,7 +148,7 @@
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
                 <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                    <a class="page-link" href="<?= ($page > 1) ? '?page=' . ($page - 1) . '&search_number=' . $search_number : '#' ?>" aria-label="Anterior">
+                    <a class="page-link" href="<?= ($page > 1) ? '?page=' . ($page - 1) . '&search_number_ficha=' . $search_number_ficha . '&search_number_documento=' . $search_number_documento : '#' ?>" aria-label="Anterior">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
@@ -156,27 +159,25 @@
                 $end = min($total_pages, $start + $max_links - 1);
 
                 if ($start > 1): ?>
-                    <li class="page-item"><a class="page-link" href="?page=1&search_number=<?= $search_number ?>">1</a></li>
+                    <li class="page-item"><a class="page-link" href="?page=1&search_number_ficha=<?= $search_number_ficha ?>&search_number_documento=<?= $search_number_documento ?>">1</a></li>
                     <?php if ($start > 2): ?>
                         <li class="page-item disabled"><span class="page-link">...</span></li>
                     <?php endif; ?>
                 <?php endif; ?>
 
                 <?php for ($i = $start; $i <= $end; $i++): ?>
-                    <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
-                        <a class="page-link" href="?page=<?= $i ?>&search_number=<?= $search_number ?>"><?= $i ?></a>
-                    </li>
+                    <li class="page-item <?= ($page == $i) ? 'active' : '' ?>"><a class="page-link" href="?page=<?= $i ?>&search_number_ficha=<?= $search_number_ficha ?>&search_number_documento=<?= $search_number_documento ?>"><?= $i ?></a></li>
                 <?php endfor; ?>
 
                 <?php if ($end < $total_pages): ?>
                     <?php if ($end < $total_pages - 1): ?>
                         <li class="page-item disabled"><span class="page-link">...</span></li>
                     <?php endif; ?>
-                    <li class="page-item"><a class="page-link" href="?page=<?= $total_pages ?>&search_number=<?= $search_number ?>"><?= $total_pages ?></a></li>
+                    <li class="page-item"><a class="page-link" href="?page=<?= $total_pages ?>&search_number_ficha=<?= $search_number_ficha ?>&search_number_documento=<?= $search_number_documento ?>"><?= $total_pages ?></a></li>
                 <?php endif; ?>
 
                 <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : '' ?>">
-                    <a class="page-link" href="<?= ($page < $total_pages) ? '?page=' . ($page + 1) . '&search_number=' . $search_number : '#' ?>" aria-label="Siguiente">
+                    <a class="page-link" href="<?= ($page < $total_pages) ? '?page=' . ($page + 1) . '&search_number_ficha=' . $search_number_ficha . '&search_number_documento=' . $search_number_documento : '#' ?>" aria-label="Siguiente">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>

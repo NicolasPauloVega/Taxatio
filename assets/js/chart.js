@@ -13,8 +13,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 datasets: [{
                     label: item.pregunta,
                     data: Object.values(item.respuestas),
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(0, 0, 0, 1)',
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.7)',
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(255, 206, 86, 0.7)',
+                        'rgba(153, 102, 255, 0.7)',
+                        'rgba(255, 159, 64, 0.7)'
+                    ],
+                    borderColor: 'rgba(0, 0, 0, 0.1)',
                     borderWidth: 1
                 }]
             },
@@ -22,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 responsive: true,
                 scales: {
                     x: {
-                        beginAtZero: true
+                        beginAtZero: true,
                     },
                     y: {
                         beginAtZero: true,
