@@ -4,15 +4,21 @@
     session_start();
 
     // Verificamos si el usuario está logueado o no
-    if (!isset($_SESSION['usuario']) || $_SESSION['usuario'] == '' || $_SESSION['usuario'] != 1) {
+    if (!isset($_SESSION['usuario']) || $_SESSION['usuario'] == '' || $_SESSION['usuario'] != 1 ) {
         header('location: ../../view/home.php');
         exit();
     }
 
-    // Almacenamos la sesion
+    // Almacenamos la sesión
     $user = $_SESSION['usuario'];
 
     include '../../model/database.php';
+
+    $id = $_GET['id'];
+
+    $sql = "SELECT * FROM usuario WHERE Id_usuario = '$id'";
+    $query = mysqli_query($connection, $sql);
+    $row = mysqli_fetch_array($query);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -70,38 +76,57 @@
             <div class="card-body">
                 <h3 class="card-title text-center mb-4 text-success">Registro</h3>
                 <form action="" method="POST">
-                    <?php include('../../controller/add_user.php'); ?>
+                    <?php include('../../controller/update_user.php'); ?>
+                    <div style="display:none;">
+                        <input name="id" value="<?= $row['Id_usuario']?>">
+                    </div>
                     <div class="mb-3">
                         <label for="nombre" class="form-label text-dark">Nombre</label>
-                        <input type="text" class="form-control border-success text-dark" id="name" name="name" placeholder="Nombre" required>
+                        <input type="text" class="form-control border-success text-dark" id="name" name="name" placeholder="Nombre" value="<?= $row['Nombre']?>" required>
                     </div>
                     <div class="mb-3">
                         <label for="apellido" class="form-label text-dark">Apellido</label>
-                        <input type="text" class="form-control border-success text-dark" id="last_name" name="last_name" placeholder="Apellido" required>
+                        <input type="text" class="form-control border-success text-dark" id="last_name" name="last_name" placeholder="Apellido" value="<?= $row['Apellido']?>" required>
                     </div>
                     <div class="mb-3">
                         <label for="tipo_cedula" class="form-label text-dark">Tipo de Documento</label>
                         <select class="form-select border-success text-dark" id="type_document" name="type_document" required>
-                            <option value="" disabled selected>Selecciona el tipo de documento</option>
-                            <option value="TI">Tarjeta de Identidad</option>
-                            <option value="CC">Cédula de Ciudadanía</option>
-                            <option value="CE">Cédula de Extranjería</option>
-                            <option value="PPT">Permiso por Protección Temporal(PPT)</option>
+                            <?php if($row['Tipo_documento'] == 'TI'){ ?>
+                                <option value="TI">Tarjeta de Identidad</option>
+                                <option value="CC">Cédula de Ciudadanía</option>
+                                <option value="CE">Cédula de Extranjería</option>
+                                <option value="PPT">Permiso por Protección Temporal(PPT)</option>
+                            <?php }elseif($row['Tipo_documento'] == 'CC'){ ?>
+                                <option value="CC">Cédula de Ciudadanía</option>
+                                <option value="TI">Tarjeta de Identidad</option>
+                                <option value="CE">Cédula de Extranjería</option>
+                                <option value="PPT">Permiso por Protección Temporal(PPT)</option>
+                            <?php }elseif($row['Tipo_documento'] == 'CE'){ ?>
+                                <option value="CE">Cédula de Extranjería</option>
+                                <option value="CC">Cédula de Ciudadanía</option>
+                                <option value="TI">Tarjeta de Identidad</option>
+                                <option value="PPT">Permiso por Protección Temporal(PPT)</option>
+                            <?php }else{ ?>
+                                <option value="PPT">Permiso por Protección Temporal(PPT)</option>
+                                <option value="CE">Cédula de Extranjería</option>
+                                <option value="CC">Cédula de Ciudadanía</option>
+                                <option value="TI">Tarjeta de Identidad</option>
+                            <?php }?>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="numero_documento" class="form-label text-dark">Número de Documento</label>
-                        <input type="text" class="form-control border-success text-dark" id="number_document" name="number_document" placeholder="Número de documento" required>
+                        <input type="text" class="form-control border-success text-dark" id="number_document" name="number_document" placeholder="Número de documento" value="<?= $row['Numero_documento']?>" required>
                     </div>
                     <div class="mb-3" style="display: none;">
                         <label for="rol" class="form-label text-dark">Rol</label>
-                        <input type="text" name="rol" id="rol" class="form-control border-success text-dark" value="3">
+                        <input type="text" name="rol" id="rol" class="form-control border-success text-dark" value="<?= $row['Id_rol'] ?>">
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label text-dark">Correo electronico</label>
-                        <input type="email" name="email" id="email" class="form-control border-success text-dark" placeholder="Ingresa el correo del instructor">
+                        <input type="email" name="email" id="email" class="form-control border-success text-dark" placeholder="Ingresa el correo del instructor" value=<?= $row['Correo_electronico']?> required>
                     </div>
-                    <input type="submit" class="btn w-100" name="register" value="Registrar" style="background-color: #2E7D32; color: #ffffff;">
+                    <input type="submit" class="btn w-100" name="update_user" value="Actualizar" style="background-color: #2E7D32; color: #ffffff;">
                 </form>
                 <div class="text-center mt-3">
                     <a href="../admin/users.php" class="text-success" style="text-decoration: none;">Volver</a>

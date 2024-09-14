@@ -86,6 +86,7 @@
                             <option value="TI">Tarjeta de Identidad</option>
                             <option value="CC">Cédula de Ciudadanía</option>
                             <option value="CE">Cédula de Extranjería</option>
+                            <option value="PPT">Permiso por Protección Temporal(PPT)</option>
                         </select>
                     </div>
                     <div class="mb-3">

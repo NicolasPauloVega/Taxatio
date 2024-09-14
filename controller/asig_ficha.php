@@ -5,6 +5,7 @@
         if(isset($_POST['user']) && is_numeric($_POST['number'])){
             $id_user = $_POST['user'];
             $number_ficha = $_POST['number'];
+            $asig = 'Si';
 
             // Consultamos si la ficha existe
             $sql = "SELECT * FROM ficha WHERE Numero_ficha = '$number_ficha'";
@@ -14,7 +15,7 @@
                 $row = mysqli_fetch_array($query);
 
                 // Insertamos el registro en ficha_aprendiz
-                $sql_add = "INSERT INTO ficha_aprendiz(Id_ficha_aprendiz, Id_usuario, Id_ficha) VALUES('', '$id_user', '{$row['Id_ficha']}')";
+                $sql_add = "INSERT INTO ficha_aprendiz(Id_ficha_aprendiz, Id_usuario, Id_ficha, Asignada) VALUES('', '$id_user', '{$row['Id_ficha']}', '{$asig}')";
                 $query_add = mysqli_query($connection, $sql_add);
 
                 if($query_add) {

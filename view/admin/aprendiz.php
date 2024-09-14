@@ -134,6 +134,7 @@
                             <td><?= $row['Apellido'] ?></td>
                             <td><?= $row['Tipo_documento'] . " - " . $row['Numero_documento'] ?></td>
                             <td>
+                                <a href="./update_user.php?id=<?= $row['Id_usuario']?>" class="btn btn-warning btn-sm">Actualizar</a>
                                 <a href="../../controller/delete_user.php?id=<?= $row['Id_usuario'] ?>" class="btn btn-danger btn-sm">Eliminar</a>
                                 <?php
                                     $sql_a = "SELECT * FROM ficha_aprendiz WHERE Id_usuario = {$row['Id_usuario']}";
@@ -144,7 +145,7 @@
 
                                         if($row_a['Asignada'] == 'Si'){
                                             ?>
-                                            <a href="./update_.php?id=<?= $row['Id_usuario'] ?>" class="btn btn-warning btn-sm">Cambiar ficha</a>
+                                            <a href="./update_.php?id=<?= $row['Id_usuario'] ?>" class="btn btn-primary btn-sm">Cambiar ficha</a>
                                             <?php
                                         } else {
                                             ?>

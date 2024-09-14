@@ -158,6 +158,7 @@
                         <td><?= $row['Tipo_documento'] ?> - <?= $row['Numero_documento'] ?></td>
                         <td><?= $row['Tipo'] ?></td>
                         <td>
+                            <a href="./update_user.php?id=<?= $row['Id_usuario']?>" class="btn btn-warning btn-sm">Actualizar</a>
                             <a href="../../controller/delete_user.php?id=<?= $row['Id_usuario'] ?>" class="btn btn-danger btn-sm">Eliminar</a>
                         </td>
                     </tr>

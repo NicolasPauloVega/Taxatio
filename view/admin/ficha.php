@@ -13,23 +13,18 @@
 
     include('../../model/database.php'); // Incluir la base de datos
 
-    // Consulta general para aprendices
-    $sql = "SELECT f.Numero_ficha, u.Nombre, u.Apellido, u.Tipo_documento, u.Numero_documento, u.Id_usuario, f.Nombre_ficha, r.Tipo 
-    FROM rol r 
-    JOIN usuario u ON r.Id_rol = u.Id_rol
-    JOIN ficha_aprendiz fa ON u.Id_usuario = fa.Id_usuario 
-    JOIN ficha f ON fa.Id_ficha = f.Id_ficha  
-    WHERE u.Id_rol = 2
-    ORDER BY f.Numero_ficha ASC";
+    // Definir el número de usuarios por página
+    $usuarios_por_pagina = 50;
 
-    // Consulta general para instructores
-    $sql_ = "SELECT f.Numero_ficha, u.Nombre, u.Apellido, u.Tipo_documento, u.Numero_documento, u.Id_usuario, f.Nombre_ficha, r.Tipo 
-            FROM rol r 
-            JOIN usuario u ON r.Id_rol = u.Id_rol 
-            JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario 
-            JOIN ficha f ON fi.Id_ficha = f.Id_ficha 
-            WHERE u.Id_rol = 3 
-            ORDER BY f.Numero_ficha ASC";
+    // Calcular la página actual
+    if (isset($_GET['pagina']) && is_numeric($_GET['pagina'])) {
+        $pagina_actual = (int) $_GET['pagina'];
+    } else {
+        $pagina_actual = 1;
+    }
+
+    // Calcular el OFFSET para la consulta SQL
+    $offset = ($pagina_actual - 1) * $usuarios_por_pagina;
 
     // Filtrado por número de ficha si está presente en la solicitud GET
     if (isset($_GET['ficha']) && !empty($_GET['ficha'])) {
@@ -40,7 +35,8 @@
         JOIN ficha_aprendiz fa ON u.Id_usuario = fa.Id_usuario 
         JOIN ficha f ON fa.Id_ficha = f.Id_ficha  
         WHERE u.Id_rol = 2 AND f.Numero_ficha LIKE '%$ficha%'
-        ORDER BY f.Numero_ficha ASC";
+        ORDER BY f.Numero_ficha ASC
+        LIMIT $usuarios_por_pagina OFFSET $offset";
 
         $sql_ = "SELECT DISTINCT f.Numero_ficha, u.Nombre, u.Apellido, u.Tipo_documento, u.Numero_documento, u.Id_usuario, f.Nombre_ficha, r.Tipo 
         FROM rol r 
@@ -48,12 +44,41 @@
         JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario 
         JOIN ficha f ON fi.Id_ficha = f.Id_ficha  
         WHERE u.Id_rol = 3 AND f.Numero_ficha LIKE '%$ficha%'
-        ORDER BY f.Numero_ficha ASC";
+        ORDER BY f.Numero_ficha ASC
+        LIMIT $usuarios_por_pagina OFFSET $offset";
+    } else {
+        // Consulta general para aprendices
+        $sql = "SELECT f.Numero_ficha, u.Nombre, u.Apellido, u.Tipo_documento, u.Numero_documento, u.Id_usuario, f.Nombre_ficha, r.Tipo 
+        FROM rol r 
+        JOIN usuario u ON r.Id_rol = u.Id_rol
+        JOIN ficha_aprendiz fa ON u.Id_usuario = fa.Id_usuario 
+        JOIN ficha f ON fa.Id_ficha = f.Id_ficha  
+        WHERE u.Id_rol = 2
+        ORDER BY f.Numero_ficha ASC
+        LIMIT $usuarios_por_pagina OFFSET $offset";
+
+        // Consulta general para instructores
+        $sql_ = "SELECT f.Numero_ficha, u.Nombre, u.Apellido, u.Tipo_documento, u.Numero_documento, u.Id_usuario, f.Nombre_ficha, r.Tipo 
+            FROM rol r 
+            JOIN usuario u ON r.Id_rol = u.Id_rol 
+            JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario 
+            JOIN ficha f ON fi.Id_ficha = f.Id_ficha 
+            WHERE u.Id_rol = 3 
+            ORDER BY f.Numero_ficha ASC
+            LIMIT $usuarios_por_pagina OFFSET $offset";
     }
 
     // Ejecutar las consultas
     $query = mysqli_query($connection, $sql);
     $query_ = mysqli_query($connection, $sql_);
+
+    // Contar el número total de registros para la paginación
+    $total_usuarios_sql = "SELECT COUNT(*) AS total FROM usuario WHERE Id_rol != 1";
+    $total_usuarios_result = mysqli_query($connection, $total_usuarios_sql);
+    $total_usuarios = mysqli_fetch_assoc($total_usuarios_result)['total'];
+
+    // Calcular el total de páginas
+    $total_paginas = ceil($total_usuarios / $usuarios_por_pagina);
 ?>
 
 <!DOCTYPE html>
@@ -151,11 +176,11 @@
                                 <td><?= $row['Apellido'] ?></td>
                                 <td><?= $row['Tipo'] ?></td>
                                 <td>
+                                    <a href="./update_user.php?id=<?= $row['Id_usuario']?>" class="btn btn-warning btn-sm">Actualizar</a>
                                     <a href="../../controller/delete_user.php?id=<?= $row['Id_usuario'] ?>" class="btn btn-danger btn-sm">Eliminar</a>
                                 </td>
                             </tr>
                         <?php endwhile; ?>
-
                         <?php while($row_ = mysqli_fetch_array($query_)): ?>
                             <tr>
                                 <td><?= $row_['Numero_ficha'] ?></td>
@@ -169,16 +194,69 @@
                             </tr>
                         <?php endwhile; ?>
                     <?php else: ?>
-                    <tr>
-                        <td colspan="8" class="text-center">Ficha no asignada</td>
-                    </tr>
+                        <tr>
+                            <td colspan="6">No se encontraron usuarios.</td>
+                        </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
         </div>
 
-    <!-- Scripts de Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <!-- Botón de anterior -->
+                <?php if ($pagina_actual > 1): ?>
+                    <li class="page-item">
+                        <a class="page-link" href="?pagina=<?= $pagina_actual - 1 ?>" aria-label="Anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
+
+                <!-- Mostrar los primeros 6 números de página -->
+                <?php
+                $max_paginas_visibles = 6; // Máximo número de páginas que se mostrarán de forma continua
+                if ($total_paginas <= $max_paginas_visibles) {
+                    // Si el total de páginas es menor o igual al máximo, mostrar todas
+                    for ($i = 1; $i <= $total_paginas; $i++): ?>
+                        <li class="page-item <?= ($i == $pagina_actual) ? 'active' : '' ?>">
+                            <a class="page-link" href="?pagina=<?= $i ?>"><?= $i ?></a>
+                        </li>
+                    <?php endfor;
+                } else {
+                    // Mostrar los primeros 6 números
+                    for ($i = 1; $i <= $max_paginas_visibles; $i++): ?>
+                        <li class="page-item <?= ($i == $pagina_actual) ? 'active' : '' ?>">
+                            <a class="page-link" href="?pagina=<?= $i ?>"><?= $i ?></a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <!-- Mostrar elipsis si el total de páginas es mayor a 6 -->
+                    <?php if ($total_paginas > $max_paginas_visibles): ?>
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">...</a>
+                        </li>
+                        <!-- Mostrar el último número de página -->
+                        <li class="page-item <?= ($total_paginas == $pagina_actual) ? 'active' : '' ?>">
+                            <a class="page-link" href="?pagina=<?= $total_paginas ?>"><?= $total_paginas ?></a>
+                        </li>
+                    <?php endif;
+                }
+                ?>
+
+                <!-- Botón de siguiente -->
+                <?php if ($pagina_actual < $total_paginas): ?>
+                    <li class="page-item">
+                        <a class="page-link" href="?pagina=<?= $pagina_actual + 1 ?>" aria-label="Siguiente">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
