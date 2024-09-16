@@ -94,10 +94,20 @@
 
                 <div class="mb-3">
                     <label for="response_type" class="form-label text-success">Tipo de Pregunta</label>
-                    <select class="form-select" id="response_type" name="response_type" required>
+                    <select class="form-select" id="type_question" name="type_question" required>
                         <option value="" disabled selected>Selecciona el tipo de respuesta</option>
-                        <option value="Excelente/Bueno/Regular/Malo/Pésimo">Excelente/ Buena/ Regular/ Mala/ Pésima</option>
-                        <option value="Si/No">Sí / No</option>
+                        <?php
+                            $question_sql = "SELECT * FROM tipo_pregunta";
+                            $question_query = mysqli_query($connection, $question_sql);
+
+                            if($question_query){
+                                while($question_row = mysqli_fetch_array($question_query)){
+                                    ?>
+                                    <option value="<?= $question_row['Id_tipo_pregunta']?>"><?= "{$question_row['Tipo']}"?></option>
+                                    <?php
+                                }
+                            }
+                        ?>
                     </select>
                 </div>
 

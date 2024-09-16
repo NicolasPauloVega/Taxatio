@@ -17,7 +17,7 @@
     $id = $_GET['id'];
 
     // Realizamos una consulta para encuestas y preguntas
-    $sql = "SELECT * FROM pregunta JOIN encuesta ON pregunta.Id_encuesta = encuesta.Id_encuesta WHERE encuesta.Id_encuesta = '$id'";
+    $sql = "SELECT * FROM tipo_pregunta fi JOIN pregunta p ON fi.Id_tipo_pregunta = p.Id_tipo_pregunta JOIN encuesta e ON p.Id_encuesta = e.Id_encuesta WHERE e.Id_encuesta = '$id' ORDER BY p.Id_pregunta ASC";
 
     // Ejecutamos las consultas
     $query = mysqli_query($connection, $sql);
@@ -80,7 +80,7 @@
                 <thead>
                     <tr>
                         <th>Pregunta</th>
-                        <th>Tipo de respuesta</th>
+                        <th>Tipo</th>
                         <th>Trimestre</th>
                         <th>Estado</th>
                         <th colspan="2">Acciones</th>
@@ -92,14 +92,12 @@
                         while($row = mysqli_fetch_array($query)):
                     ?>
                     <tr>
-                        <td><?= $row['Pregunta'] ?></td>
-                        <td><?= $row['Tipo_pregunta'] ?></td>
+                        <td>¿<?= $row['Pregunta'] ?>?</td>
+                        <td><?= $row['Tipo'] ?></td>
                         <td><?= $row['Trimestre'] . "° Trimestre del año " . $row['Ano'] ?></td>
                         <td><?= $row['Estado'] ?></td>
-                        <td>
-                            <a href="./edit_question.php?id=<?= $row['Id_pregunta'] ?>" class="btn btn-warning btn-sm">Editar</a>
-                        </td>
-                        <td>
+                        <td style="display: flex;">
+                            <a href="./edit_question.php?id=<?= $row['Id_pregunta'] ?>" class="btn btn-warning btn-sm" style="margin-right: 10px;">Editar</a>
                             <a href="../../controller/delete_question.php?id=<?= $row['Id_pregunta'] ?>" class="btn btn-danger btn-sm">Eliminar</a>
                         </td>
                     </tr>

@@ -24,7 +24,7 @@ if(isset($_POST['send'])){
             $mail->Subject = "Restablecer contraseña";
             $mail->Body   = <<<END
 
-            Click <a href="http://localhost/taxatio/view/admin/reset-password.php?token=$token">aquí</a> para cambiar su contraseña
+            Click <a href="http://localhost/taxatio/view/admin/reset-password.php?token=$token">aqui</a> para cambiar su contraseña
 
             END;
 

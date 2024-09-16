@@ -12,7 +12,7 @@
             $response_type = $_POST['response_type'];
 
             // Realiazamos una consulta
-            $sql = "UPDATE pregunta SET Id_encuesta = '$survey', Pregunta = '$question', Tipo_pregunta = '$response_type' WHERE Id_pregunta = '$id' ";
+            $sql = "UPDATE Pregunta SET Id_encuesta = '$survey', Id_tipo_pregunta= '$response_type', Pregunta = '$question' WHERE Id_pregunta = '$id' ";
             // Ejecutamos la consulta
             $query = mysqli_query($connection, $sql);
 

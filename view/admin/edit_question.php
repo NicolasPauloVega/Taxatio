@@ -18,7 +18,7 @@
     $id = $_GET['id'];
 
     // Definimos una consulta
-    $sql = "SELECT * FROM pregunta JOIN encuesta ON pregunta.Id_encuesta = encuesta.Id_encuesta WHERE Id_pregunta = '$id'";
+    $sql = "SELECT * FROM tipo_pregunta ti JOIN pregunta ON ti.Id_tipo_pregunta = pregunta.Id_tipo_pregunta JOIN encuesta ON pregunta.Id_encuesta = encuesta.Id_encuesta WHERE Id_pregunta = '$id'";
     // Ejecutamos la consulta
     $query = mysqli_query($connection, $sql);
     // Guardamos la informacion
@@ -108,8 +108,27 @@
                 <div class="mb-3">
                     <label for="response_type" class="form-label text-success">Tipo de Pregunta</label>
                     <select class="form-select" id="response_type" name="response_type" required>
-                        <option value="Muy buena/Buena/Normal/Mala/Muy mala" <?= $row['Tipo_pregunta'] == 'Muy buena/Buena/Normal/Mala/Muy mala' ? 'selected' : '' ?>>Muy buena / Buena / Normal / Mala / Muy mala</option>
-                        <option value="Si/No" <?= $row['Tipo_pregunta'] == 'Si/No' ? 'selected' : '' ?>>Sí / No</option>
+                        <?php
+                            if($row['Id_tipo_pregunta'] == 1){
+                                ?>
+                                <option value="1">Acuerdo</option>
+                                <option value="2">Frecuencia</option>
+                                <option value="3">Probabilidad</option>
+                                <?php
+                            } else if($row['Id_tipo_pregunta'] == 2){
+                                ?>
+                                <option value="2">Frecuencia</option>
+                                <option value="1">Acuerdo</option>
+                                <option value="3">Probabilidad</option>
+                                <?php
+                            } else {
+                                ?>
+                                <option value="3">Probabilidad</option>
+                                <option value="1">Acuerdo</option>
+                                <option value="2">Frecuencia</option>
+                                <?php
+                            }
+                        ?>
                     </select>
                 </div>
 

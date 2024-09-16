@@ -5,7 +5,7 @@
     // Verificamos si se envió el formulario
     if (isset($_POST["save"])) {
         // Verificamos si se enviaron todos los campos
-        if (empty($_POST["survey"]) || empty($_POST["question"]) || empty($_POST["response_type"])) {
+        if (empty($_POST["survey"]) || empty($_POST["question"]) || empty($_POST["type_question"])) {
             echo "
                 <script>
                     const Toast = Swal.mixin({
@@ -29,10 +29,10 @@
             // Almacenamos la información
             $survey = $_POST["survey"];
             $question = $_POST["question"];
-            $response_type = $_POST["response_type"];
+            $type_question = $_POST["type_question"];
 
             // Realizamos la consulta
-            $sql = "INSERT INTO pregunta (Id_pregunta, Id_encuesta, Pregunta, Tipo_pregunta) VALUES ('', '$survey', '$question', '$response_type')";
+            $sql = "INSERT INTO pregunta (Id_pregunta, Id_encuesta, Id_tipo_pregunta, Pregunta) VALUES ('', '$survey', '$type_question', '$question')";
 
             // Ejecutamos la consulta
             $query = $connection->query($sql);
