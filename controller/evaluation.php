@@ -1,34 +1,53 @@
 <?php
-include '../model/database.php';
+if($_SERVER['REQUEST_METHOD'] == 'POST'){
+    include '../model/database.php';
 
-if(isset($_POST['enviar'])){
-    if(isset($_POST['acuerdo']) || isset($_POST['frecuencia']) || isset($_POST['probabilidad']) && isset($_POST['id']) && isset($_POST['id_i']) && isset($_POST['id_a'])){
-        $id_respuesta = null;
-        $acuerdo = $_POST['acuerdo'];
-        $frecuencia = $_POST['frecuencia'];
-        $probabilidad = $_POST['probabilidad'];
-        $id_pregunta = $_POST['id'];
-        $id_instructor = $_POST['id_i'];
-        $id_aprendiz = $_POST['id_a'];
-        $fecha_hora = date('Y-m-d H:i:s');
-        $estado = 'Evaluado';
+    // Verificar si los campos existen antes de acceder a ellos
+    $id_preguntas = isset($_POST['id_pregunta']) ? $_POST['id_pregunta'] : [];
+    $id_aprendiz = isset($_POST['id_aprendiz']) ? $_POST['id_aprendiz'] : null;
+    $id_instructor = isset($_POST['id_instructor']) ? $_POST['id_instructor'] : null;
+    $respuestas = isset($_POST['response']) ? $_POST['response'] : [];
+    $fecha = date('Y-m-d H:i:s');
+    $estado = 'evaluado';
 
-        $sql = "SELECT * FROM respuesta WHERE id_ficha_aprendiz = '$id_aprendiz' AND id_ficha_instructor = '$id_instructor' AND id_pregunta = '$id_pregunta' AND Estado = '$estado'";
-        $query = mysqli_query($connection, $sql);
+    $respuesta_existente = false;
+    $exito_insercion = false;
 
-        if($query && mysqli_num_rows($query) > 0){
-            echo "No se puede volver a ecaluar al instructor";
-        }else{
-            $sql_add = "INSERT INTO respuesta VALUES('$id_respuesta', '$id_aprendiz', '$id_instructor', '$id_pregunta', '$acuerdo', '$fecha_hora', '$estado'),('$id_respuesta', '$id_aprendiz', '$id_instructor', '$id_pregunta', '$frecuencia', '$fecha_hora', '$estado'),('$id_respuesta', '$id_aprendiz', '$id_instructor', '$id_pregunta','$probabilidad', '$fecha_hora', '$estado')";
-            $query_add = mysqli_query($connection, $sql_add);
+    if (!empty($id_preguntas) && !empty($respuestas)) {
+        foreach ($id_preguntas as $id_pregunta) {
+            if(isset($respuestas[$id_pregunta])){
+                $respuesta = $respuestas[$id_pregunta];
 
-            if($query_add){
-                echo "<script>
-                    window.location.href = './evaluate.php';
-                </script>";
-            }else{
-                echo "<script>console.log('Fallo en el envio: ". mysqli_error($connection) . "')</script>";
+                // Verifica si la respuesta ya existe
+                $sql = "SELECT * FROM respuesta WHERE Id_ficha_aprendiz = $id_aprendiz AND Id_ficha_instructor = $id_instructor AND Id_pregunta = $id_pregunta AND Estado = 'Evaluado'";
+                $query = mysqli_query($connection, $sql);
+
+                if(mysqli_num_rows($query) > 0){
+                    $respuesta_existente = true;
+                } else {
+                    // Inserta la nueva respuesta
+                    $insert = "INSERT INTO respuesta VALUES('', '$id_aprendiz', '$id_instructor', '$id_pregunta', '$respuesta', '$fecha', '$estado')";
+                    $query_insert = mysqli_query($connection, $insert);
+
+                    if($query_insert){
+                        $exito_insercion = true;
+                    }
+                }
             }
         }
     }
+
+    if($respuesta_existente){
+        header('location: ./form/warning.php');
+        exit();
+    } elseif($exito_insercion) {
+        echo "<script src='../assets/js/success.js'></script>";
+    } else {
+        echo "<script src='../assets/js/error.js'></script>";
+    }
+    ?>
+    <script>
+        history.replaceState(null,null,location.pathname);
+    </script>
+    <?php
 }

@@ -1,12 +1,25 @@
 <?php
+    // Manejo de sesiones
     session_start();
 
-    if (!isset($_SESSION['usuario']) || $_SESSION['usuario'] == '' || $_SESSION['usuario'] != 1) {
+    include '../../model/database.php';
+
+    // Verificamos si el usuario está logueado o no
+    if (!isset($_SESSION['usuario']) || $_SESSION['usuario'] == '') {
         header('location: ../../view/home.php');
         exit();
     }
 
-    include('../../model/database.php');
+    // Almacenamos la sesion
+    $user = $_SESSION['usuario'];
+
+    $isAdmin = "SELECT * FROM usuario WHERE Id_usuario = '$user' AND Id_rol = 1";
+    $queryIsAdmin = mysqli_query($connection, $isAdmin);
+
+    if($queryIsAdmin){
+        header('location: ../home.php');
+        exit();
+    }
 
     $id = isset($_GET['id']);
 

@@ -1,26 +1,23 @@
 <?php
-    // Manejo de sesiones
     session_start();
 
-    // Verificamos si el usuario está logueado
     if (!isset($_SESSION['usuario']) || $_SESSION['usuario'] == '') {
         header('location: ../index.php');
         exit();
     }
 
-    // Almacenamos la sesión del usuario
     $user = $_SESSION['usuario'];
 
-    // Incluimos la conexión a la base de datos
     include '../model/database.php';
 
-    // Almacenamos el id del instructor desde la URL
     $id = $_GET['id'];
-    $aprendiz = $_GET['aprendiz'];
 
-    // Consulta para obtener todas las preguntas
-    $sql = "SELECT * FROM tipo_pregunta t_i JOIN pregunta p ON t_i.Id_tipo_pregunta = p.Id_tipo_pregunta JOIN encuesta e ON p.Id_encuesta = e.Id_encuesta WHERE e.Estado = 'Activo' ";
+    $sql = "SELECT * FROM tipo_pregunta t_i JOIN pregunta p ON t_i.Id_tipo_pregunta = p.Id_tipo_pregunta JOIN encuesta e ON p.Id_encuesta = e.Id_encuesta WHERE e.Estado = 'Activo'";
     $query = mysqli_query($connection, $sql);
+
+    $sql_ficha = "SELECT * FROM ficha_aprendiz WHERE Id_usuario = '$user'";
+    $query_ficha = mysqli_query($connection, $sql_ficha);
+    $row_ficha = mysqli_fetch_array($query_ficha);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,11 +25,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Preguntas - Taxatio</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Iconos de FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Sweetalert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
@@ -68,112 +62,117 @@
         </div>
     </nav>
 
-<!-- Instructores -->
-<div class="container my-5">
-    <h1 class="mb-4 text-success text-center">Preguntas</h1>
+    <!-- Contenedor centrado -->
+    <div class="container d-flex justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <div class="card my-5">
+                <div class="card-body">
 
-    <?php if($query){
-        ?>
-        <form action="" method="post">
-            <div class=".table-responsive">
-                <table class="table table-bordered table-hover">
-                    <thead class="table-success text-center">
-                        <tr>
-                            <th>Pregunta</th>
-                            <th>Posibles respuestas</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                            while($row = mysqli_fetch_array($query)){
-                                ?>
-                                <tr>
-                                    <div style="display: none;">
-                                        <input type="pass" name="id" value="<?= $row['Id_pregunta']?>">
-                                        <input type="pass" name="id_i" value="<?= $id ?>">
-                                        <input type="pass" name="id_a" value="<?= $aprendiz ?>">
-                                    </div>
-                                    <td class="align-middle"><?= $row['Pregunta']?></td>
-                                    <td>
-                                    <?php
-                                        if($row['Id_tipo_pregunta'] == 1){
-                                            ?>
-                                            <input type="radio" name="acuerdo" id="acuerdo" value="Totalmente de acuerdo" required> Totalmente de acuerdo
-                                            <br>
-                                            <input type="radio" name="acuerdo" id="acuerdo" value="De acuerdo" required> De acuerdo
-                                            <br>
-                                            <input type="radio" name="acuerdo" id="acuerdo" value="indeciso" required> indeciso
-                                            <br>
-                                            <input type="radio" name="acuerdo" id="acuerdo" value="En desacuerdo" required> En desacuerdo
-                                            <br>
-                                            <input type="radio" name="acuerdo" id="acuerdo" value="Totalmente en desacuerdo" required> Totalmente en desacuerdo
-                                            <br>
-                                            <?php
-                                        } else if($row['Id_tipo_pregunta'] == 2){
-                                            ?>
-                                            <input type="radio" name="frecuencia" id="frecuencia" value="Muy frecuentemente" required> Muy frecuentemente
-                                            <br>
-                                            <input type="radio" name="frecuencia" id="frecuencia" value="Frecuentemente" required> Frecuentemente
-                                            <br>
-                                            <input type="radio" name="frecuencia" id="frecuencia" value="Ocasionalmente" required> Ocasionalmente
-                                            <br>
-                                            <input type="radio" name="frecuencia" id="frecuencia" value="Raramente" required> Raramente
-                                            <br>
-                                            <input type="radio" name="frecuencia" id="frecuencia" value="Nunca" required> Nunca
-                                            <br>
-                                            <?php
-                                        } else if($row['Id_tipo_pregunta'] == 3){
-                                            ?>
-                                            <input type="radio" name="probabilidad" id="probabilidad" required> Casi siempre
-                                            <br>
-                                            <input type="radio" name="probabilidad" id="probabilidad" required> Usualmente
-                                            <br>
-                                            <input type="radio" name="probabilidad" id="probabilidad" required> Ocasionalmente
-                                            <br>
-                                            <input type="radio" name="probabilidad" id="probabilidad" required> Usualmente no
-                                            <br>
-                                            <input type="radio" name="probabilidad" id="probabilidad" required> Casi nunca
-                                            <br>
-                                            <?php
-                                        } else {
-                                            echo "La pregunta ya fue resuelta";
-                                        }
-                                    ?>
-                                    </td>
-                                </tr>
-                                <?php
-                            }
-                        ?>
-                        <tr>
-                            <td colspan="2" class="text-center"><input type="submit" value="Enviar" name="enviar" class="btn btn-success btn-sm"></td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <h1 class="mb-4 text-success text-center">Preguntas</h1>
+
+                    <?php if (mysqli_num_rows($query) > 0) { ?>
+                        <form action="" method="post">
+                            <?php include '../controller/evaluation.php'; ?>
+                            <?php
+                                while ($row = mysqli_fetch_array($query)) {
+                                    $user_validate = "SELECT * FROM respuesta WHERE Id_ficha_aprendiz = '{$row_ficha['Id_ficha_aprendiz']}' AND Id_ficha_instructor = '$id' AND Estado = 'Activo' AND Id_pregunta = '{$row['Id_pregunta']}'";
+                                    $user_validate_result = mysqli_query($connection, $user_validate);
+                                    $user_validate_query = mysqli_fetch_array($user_validate_result);
+
+                                    if($user_validate_query){
+                                        echo "<script src='../assets/js/warning.js'></script>";
+                                    }else{ ?>
+                                        <div class="mb-3">
+                                            <label for="" class="form-label"><?php echo $row['Pregunta']?></label><br>
+                                            <input type="hidden" name="id_aprendiz" value="<?php echo $row_ficha['Id_ficha_aprendiz']; ?>">
+                                            <input type="hidden" name="id_instructor" value="<?php echo $id; ?>">
+                                            <input type="hidden" name="id_pregunta[]" value="<?php echo $row['Id_pregunta']; ?>">
+
+                                            <?php if ($row['Id_tipo_pregunta'] == 1) { ?>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="response[<?php echo $row['Id_pregunta']; ?>]" value="Totalmente de acuerdo" required>
+                                                    <label class="form-check-label">Totalmente de acuerdo</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="response[<?php echo $row['Id_pregunta']; ?>]" value="De acuerdo" required>
+                                                    <label class="form-check-label">De acuerdo</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="response[<?php echo $row['Id_pregunta']; ?>]" value="Indeciso" required>
+                                                    <label class="form-check-label">Indeciso</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="response[<?php echo $row['Id_pregunta']; ?>]" value="En desacuerdo" required>
+                                                    <label class="form-check-label">En desacuerdo</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="response[<?php echo $row['Id_pregunta']; ?>]" value="Totalmente en desacuerdo" required>
+                                                    <label class="form-check-label">Totalmente en desacuerdo</label>
+                                                </div>
+                                            <?php } elseif ($row['Id_tipo_pregunta'] == 2) { ?>
+                                                <div class="form-check">
+                                                    <input class="form-check-input"  type="radio" name="response[<?php echo $row['Id_pregunta']; ?>]" value="Muy frecuentemente" required>
+                                                    <label class="form-check-label">Muy frecuentemente</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input"  type="radio" name="response[<?php echo $row['Id_pregunta']; ?>]" value="Frecuentemente" required>
+                                                    <label class="form-check-label">Frecuentemente</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input"  type="radio" name="response[<?php echo $row['Id_pregunta']; ?>]" value="Ocasionalmente" required>
+                                                    <label class="form-check-label">Ocasionalmente</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input"  type="radio" name="response[<?php echo $row['Id_pregunta']; ?>]" value="Raramente" required>
+                                                    <label class="form-check-label">Raramente</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input"  type="radio" name="response[<?php echo $row['Id_pregunta']; ?>]" value="Nunca" required>
+                                                    <label class="form-check-label">Nunca</label>
+                                                </div>
+                                            <?php } elseif ($row['Id_tipo_pregunta'] == 3) { ?>
+                                                <div class="form-check">
+                                                    <input class="form-check-input"  type="radio" name="response[<?php echo $row['Id_pregunta']; ?>]" value="Casi siempre" required>
+                                                    <label class="form-check-label">Casi siempre</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input"  type="radio" name="response[<?php echo $row['Id_pregunta']; ?>]" value="Usualmente" required>
+                                                    <label class="form-check-label">Usualmente</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input"  type="radio" name="response[<?php echo $row['Id_pregunta']; ?>]" value="Ocasionalmente" required>
+                                                    <label class="form-check-label">Ocasionalmente</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input"  type="radio" name="response[<?php echo $row['Id_pregunta']; ?>]" value="Usualmente no" required>
+                                                    <label class="form-check-label">Usualmente no</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input"  type="radio" name="response[<?php echo $row['Id_pregunta']; ?>]" value="Casi nunca" required>
+                                                    <label class="form-check-label">Casi nunca</label>
+                                                </div>
+                                            <?php } ?>
+                                        </div>
+                                        <?php 
+                                    }
+                                } 
+                            ?>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-success" name="send">Enviar</button>
+                            </div>
+                        </form>
+
+                    <?php } else { ?>
+                        <div class="alert alert-warning text-center" role="alert">
+                            No se encontraron preguntas activas.
+                        </div>
+                    <?php } ?>
+                    
+                </div>
             </div>
-        </form>
-        <?php
-    } else {
-        ?>
-        <div class=".table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead class="table-success text-center">
-                    <tr>
-                        <th>Pregunta</th>
-                        <th>Posibles respuestas</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td colspan="2">El instructor ya fue encuestado</td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
-        <?php
-    } ?>
-</div>
+    </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

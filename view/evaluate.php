@@ -18,18 +18,10 @@
     // Datos aprendiz
     $sql = "SELECT * FROM usuario u JOIN ficha_aprendiz fa ON u.Id_usuario = fa.Id_usuario JOIN ficha f ON fa.Id_ficha = f.Id_ficha WHERE u.Id_usuario = $user";
     $query = mysqli_query($connection,$sql);
-    $row = mysqli_fetch_array($query);
-
+    $row_a = mysqli_fetch_array($query);
 
     // Consulta para obtener los instructores asociados con el aprendiz conectado
-    $sql_ = "SELECT DISTINCT u.Nombre, u.Apellido, fi.Competencia, fi.Id_ficha_instructor, fa.Id_ficha_aprendiz, fi.Nombre as Nombre_instructor 
-             FROM rol r 
-             JOIN usuario u ON r.Id_rol = u.Id_rol 
-             JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario 
-             JOIN ficha f ON fi.Id_ficha = f.Id_ficha 
-             JOIN ficha_aprendiz fa ON f.Id_ficha = fa.Id_ficha  
-             WHERE fa.Id_ficha_aprendiz = {$row['Id_ficha_aprendiz']}";
-
+    $sql_ = "SELECT DISTINCT u.Nombre, u.Apellido, fi.Competencia, fi.Id_ficha_instructor, fa.Id_ficha_aprendiz, fi.Nombre as Nombre_instructor FROM rol r JOIN usuario u ON r.Id_rol = u.Id_rol JOIN ficha_instructor fi ON u.Id_usuario = fi.Id_usuario JOIN ficha f ON fi.Id_ficha = f.Id_ficha JOIN ficha_aprendiz fa ON f.Id_ficha = fa.Id_ficha WHERE fa.Id_ficha_aprendiz = {$row_a['Id_ficha_aprendiz']}";
     $query_ = mysqli_query($connection, $sql_);
 ?>
 <!DOCTYPE html>
@@ -101,7 +93,7 @@
                                 <td><?= $row['Competencia'] ?></td>
                                 <td><?= $row['Nombre_instructor'] ?></td>
                                 <td>
-                                    <a href="./evaluate_id.php?id=<?= $row['Id_ficha_instructor'];?>&aprendiz=<?= $row['Id_ficha_aprendiz'] ?>" class="btn btn-info btn-sm">
+                                    <a href="./evaluate_id.php?id=<?= $row['Id_ficha_instructor'];?>" class="btn btn-info btn-sm">
                                         <i class="fa-solid fa-clipboard-check"></i>
                                     </a>
                                 </td>

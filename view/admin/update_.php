@@ -3,17 +3,27 @@
     // Manejo de sesiones
     session_start();
 
+    include '../../model/database.php';
+
     // Verificamos si el usuario está logueado o no
-    if (!isset($_SESSION['usuario']) || $_SESSION['usuario'] == '' || $_SESSION['usuario'] != 1) {
+    if (!isset($_SESSION['usuario']) || $_SESSION['usuario'] == '') {
         header('location: ../../view/home.php');
         exit();
     }
 
     // Almacenamos la sesion
     $user = $_SESSION['usuario'];
-    $id = $_GET['id'];
 
-    include '../../model/database.php';
+    $isAdmin = "SELECT * FROM usuario WHERE Id_usuario = '$user' AND Id_rol = 1";
+    $queryIsAdmin = mysqli_query($connection, $isAdmin);
+
+    if($queryIsAdmin){
+        header('location: ../home.php');
+        exit();
+    }
+    // Almacenamos la sesion
+    $user = $_SESSION['usuario'];
+    $id = $_GET['id'];
 
     $sql = "SELECT fa.Id_ficha_aprendiz, fa.Id_usuario, fa.Id_ficha, f.Numero_ficha, fa.Id_usuario FROM ficha_aprendiz fa JOIN ficha f ON fa.Id_ficha = f.Id_ficha WHERE fa.Id_usuario = '$id' ";
     $query = mysqli_query($connection, $sql);
