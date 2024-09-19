@@ -3,10 +3,12 @@ document.addEventListener('DOMContentLoaded', function(){
         icon: 'success',
         title: 'Encuesta resuelta',
         text: 'Se respondio correctamente',
-        confirmButtonText: 'ok',
+        confirmButtonText: 'Aceptar',
+        allowEscapeKey: false,
+        allowOutsideClick: false,
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location = '../evaluate.php';
+            window.location = '../view/evaluate.php';
         }
     });
 })

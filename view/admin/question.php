@@ -6,7 +6,7 @@
     include '../../model/database.php';
 
     // Verificamos si el usuario está logueado o no
-    if (!isset($_SESSION['usuario']) || $_SESSION['usuario'] == '') {
+    if (!isset($_SESSION['usuario']) || $_SESSION['usuario'] == '' || $_SESSION['usuario'] != 1) {
         header('location: ../../view/home.php');
         exit();
     }
@@ -14,13 +14,7 @@
     // Almacenamos la sesion
     $user = $_SESSION['usuario'];
 
-    $isAdmin = "SELECT * FROM usuario WHERE Id_usuario = '$user' AND Id_rol = 1";
-    $queryIsAdmin = mysqli_query($connection, $isAdmin);
-
-    if($queryIsAdmin){
-        header('location: ../home.php');
-        exit();
-    }
+    // Obtenemos el id del instructor
     $id = $_GET['id'];
 
     // Realizamos una consulta para encuestas y preguntas

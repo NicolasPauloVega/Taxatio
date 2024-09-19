@@ -4,8 +4,10 @@ document.addEventListener('DOMContentLoaded', function(){
         title: 'Error',
         text: 'No se pudo enviar las respuestas de la encuesta. Porfavor intentalo de nuevo más tarde.',
         confirmButtonText: 'Aceptar',
+        allowEscapeKey: false,
+        allowOutsideClick: false,
     }).then((result) => {
-        if (result.isConfirmed){
+        if (result.isConfirmed) {
             window.location = '../evaluate.php';
         }
     });

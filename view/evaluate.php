@@ -76,7 +76,7 @@
 
         <!-- Tabla de Instructores -->
         <div class="table-responsive">
-            <table class="table table-bordered table-hover text-center">
+            <table class="table table-bordered table-hover">
                 <thead class="table-success">
                     <tr>
                         <th>Nombre</th>
@@ -92,11 +92,24 @@
                                 <td><?= $row['Nombre'] . " " . $row['Apellido'] ?></td>
                                 <td><?= $row['Competencia'] ?></td>
                                 <td><?= $row['Nombre_instructor'] ?></td>
-                                <td>
-                                    <a href="./evaluate_id.php?id=<?= $row['Id_ficha_instructor'];?>" class="btn btn-info btn-sm">
-                                        <i class="fa-solid fa-clipboard-check"></i>
-                                    </a>
-                                </td>
+                                <?php
+                                    // Consulta para verificar si el aprendiz ya evaluó al instructor
+                                    $sql_r = "SELECT * FROM respuesta WHERE Id_ficha_aprendiz = '{$row_a['Id_ficha_aprendiz']}' AND Id_ficha_instructor = '{$row['Id_ficha_instructor']}'";
+                                    $query_r = mysqli_query($connection, $sql_r);
+                                    
+                                    // Verificar si ya ha sido evaluado
+                                    if(mysqli_num_rows($query_r) > 0) {
+                                        ?>
+                                        <td><div class="btn btn-info btn-sm"><i class="fa-solid fa-eye-slash"></i></div></td>
+                                        <?php
+                                    } else {
+                                ?>
+                                    <td>
+                                        <a href="./evaluate_id.php?id=<?= $row['Id_ficha_instructor'];?>" class="btn btn-info btn-sm">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </a>
+                                    </td>
+                                <?php } ?>
                             </tr>
                         <?php } ?>
                     <?php } else { ?>
@@ -107,7 +120,6 @@
                 </tbody>
             </table>
         </div>
-    </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>

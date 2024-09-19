@@ -3,7 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
         icon: 'warning',
         title: 'La encuesta ya esta resuelta',
         text: 'No puedes volver a responderla.',
-        confirmButtonText: 'ok'
+        confirmButtonText: 'Aceptar',
+        allowEscapeKey: false,
+        allowOutsideClick: false,
     }).then((result) => {
         if (result.isConfirmed) {
             window.location = '../evaluate.php';
