@@ -10,59 +10,64 @@
         exit();
     }
 
-    // Almacenamos la sesion
+    // Almacenamos la sesión
     $user = $_SESSION['usuario'];
 
-    $id = isset($_GET['id']);
+    // Obtenemos el ID del instructor desde la URL
+    $id = isset($_GET['id']) ? $_GET['id'] : null;
 
-    $sql = "SELECT p.Pregunta, r.Respuesta FROM encuesta e 
-    JOIN pregunta p ON e.Id_encuesta = p.Id_encuesta
-    JOIN respuesta r ON p.Id_pregunta = r.Id_pregunta 
-    JOIN ficha_instructor fi ON r.Id_ficha_instructor = fi.Id_ficha_instructor 
-    WHERE fi.Id_ficha_instructor = $id AND e.Estado = 'Activo'";
+    if ($id) {
+        $sql = "SELECT p.Pregunta, r.Respuesta FROM encuesta e 
+                JOIN pregunta p ON e.Id_encuesta = p.Id_encuesta
+                JOIN respuesta r ON p.Id_pregunta = r.Id_pregunta 
+                JOIN ficha_instructor fi ON r.Id_ficha_instructor = fi.Id_ficha_instructor 
+                WHERE fi.Id_ficha_instructor = $id AND e.Estado = 'Activo'";
 
-    $query = mysqli_query($connection, $sql);
+        $query = mysqli_query($connection, $sql);
 
-    if (!$query) {
-        die('Error en la consulta: ' . mysqli_error($connection));
-    }
-
-    $conteo_respuestas = [];
-    $preguntas = [];
-
-    while ($row = mysqli_fetch_assoc($query)) {
-        $respuesta = $row['Respuesta'];
-        $pregunta = $row['Pregunta'];
-
-        if (!isset($conteo_respuestas[$pregunta])) {
-            $conteo_respuestas[$pregunta] = [];
+        if (!$query) {
+            die('Error en la consulta: ' . mysqli_error($connection));
         }
 
-        if (!isset($conteo_respuestas[$pregunta][$respuesta])) {
-            $conteo_respuestas[$pregunta][$respuesta] = 0;
+        $conteo_respuestas = [];
+        $preguntas = [];
+
+        while ($row = mysqli_fetch_assoc($query)) {
+            $respuesta = $row['Respuesta'];
+            $pregunta = $row['Pregunta'];
+
+            if (!isset($conteo_respuestas[$pregunta])) {
+                $conteo_respuestas[$pregunta] = [];
+            }
+
+            if (!isset($conteo_respuestas[$pregunta][$respuesta])) {
+                $conteo_respuestas[$pregunta][$respuesta] = 0;
+            }
+            $conteo_respuestas[$pregunta][$respuesta]++;
         }
-        $conteo_respuestas[$pregunta][$respuesta]++;
-    }
 
-    $json_data = [];
-    foreach ($conteo_respuestas as $pregunta => $respuestas) {
-        $total_respuestas = array_sum($respuestas); // Total de respuestas por pregunta
-        $respuestas_porcentajes = [];
+        $json_data = [];
+        foreach ($conteo_respuestas as $pregunta => $respuestas) {
+            $total_respuestas = array_sum($respuestas); // Total de respuestas por pregunta
+            $respuestas_porcentajes = [];
 
-        // Calculamos el porcentaje de cada respuesta
-        foreach ($respuestas as $respuesta => $cantidad) {
-            $porcentaje = ($cantidad / $total_respuestas) * 100;
-            $respuestas_porcentajes[$respuesta] = round($porcentaje, 2); // Redondear a 2 decimales
+            // Calculamos el porcentaje de cada respuesta
+            foreach ($respuestas as $respuesta => $cantidad) {
+                $porcentaje = ($cantidad / $total_respuestas) * 100;
+                $respuestas_porcentajes[$respuesta] = round($porcentaje, 2); // Redondear a 2 decimales
+            }
+
+            $json_data[] = [
+                'pregunta' => $pregunta,
+                'respuestas' => $respuestas_porcentajes
+            ];
         }
 
-        $json_data[] = [
-            'pregunta' => $pregunta,
-            'respuestas' => $respuestas_porcentajes
-        ];
+        $json_data = json_encode($json_data);
+    } else {
+        echo "No se ha proporcionado un ID válido.";
     }
-
-    $json_data = json_encode($json_data);
-    ?>
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

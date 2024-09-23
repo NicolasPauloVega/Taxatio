@@ -21,10 +21,25 @@ if(isset($_POST['send'])){
             $mail = require '../controller/mailer.php';
             $mail->setFrom("noreplay@example.com");
             $mail->addAddress($email);
-            $mail->Subject = "Restablecer contraseña";
+            $mail->Subject = "Solicitud de cambio de contraseña";
             $mail->Body   = <<<END
 
-            Click <a href="http://localhost/taxatio/view/admin/reset-password.php?token=$token">aqui</a> para cambiar su contraseña
+            Hola aprendiz,<br><br>
+
+            Hemos recibido una solicitud para restablecer tu contraseña. Si no fuiste tú quien hizo esta solicitud, puedes ignorar este mensaje.<br><br>
+
+            Para cambiar tu contraseña, simplemente haz clic en el siguiente enlace:<br><br>
+
+            <a href="http://localhost/taxatio/view/admin/reset-password.php?token=$token">Cambiar contraseña</a><br><br>
+
+            Este enlace será válido por poco tiempo. Si expira, deberás solicitar un nuevo cambio de contraseña.<br><br>
+
+            Si tienes algún problema o preguntas, no dudes en contactarnos.<br><br>
+
+            Gracias por utilizar nuestros servicios.<br><br>
+
+            Saludos,<br>
+            El equipo de Taxatio<br>
 
             END;
 

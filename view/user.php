@@ -3,8 +3,8 @@
     session_start();
 
     // Verificamos si el usuario está logueado o no
-    if (!isset($_SESSION['usuario']) || $_SESSION['usuario'] == '' || $_SESSION['usuario'] != 1) {
-        header('location: ../../view/home.php');
+    if (!isset($_SESSION['usuario']) || $_SESSION['usuario'] == '') {
+        header('location: ./home.php');
         exit();
     }
 
@@ -13,7 +13,7 @@
     include('../model/database.php'); // Incluir la base de datos
 
     // Realizamos la consulta
-    $sql = "SELECT u.Nombre, u.Apellido, r.Tipo 
+    $sql = "SELECT u.Nombre, u.Apellido, r.Tipo, u.Id_usuario 
             FROM usuario u 
             JOIN rol r ON u.Id_rol = r.Id_rol 
             WHERE Id_usuario = $user";
@@ -82,6 +82,7 @@
                                     <th>Icono</th>
                                     <th>Rol</th>
                                     <th>Nombre Completo</th>
+                                    <th>Actualizar</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -89,6 +90,7 @@
                                     <td><i class="fa-solid fa-user-tie fa-2x text-success"></i></td>
                                     <td><?php echo $row['Tipo']; ?></td>
                                     <td><?php echo $row['Nombre'] . " " . $row['Apellido']; ?></td>
+                                    <td><a href="./update_user.php" class="text-warning"><i class="fa-solid fa-pen-to-square"></i></a></td>
                                 </tr>
                             </tbody>
                         </table>

@@ -84,9 +84,9 @@
                                     }else{ ?>
                                         <div class="mb-3">
                                             <label for="" class="form-label"><?php echo $row['Pregunta']?></label><br>
-                                            <input type="hidden" name="id_aprendiz" value="<?php echo $row_ficha['Id_ficha_aprendiz']; ?>">
-                                            <input type="hidden" name="id_instructor" value="<?php echo $id; ?>">
-                                            <input type="hidden" name="id_pregunta[]" value="<?php echo $row['Id_pregunta']; ?>">
+                                            <input type="hidden" name="id_aprendiz" value="<?php echo $row_ficha['Id_ficha_aprendiz']; ?>" readonly >
+                                            <input type="hidden" name="id_instructor" value="<?php echo $id; ?>" readonly >
+                                            <input type="hidden" name="id_pregunta[]" value="<?php echo $row['Id_pregunta']; ?>" readonly >
 
                                             <?php if ($row['Id_tipo_pregunta'] == 1) { ?>
                                                 <div class="form-check">
