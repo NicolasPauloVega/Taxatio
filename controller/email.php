@@ -21,7 +21,7 @@ if(isset($_POST['send'])){
             $mail = require '../controller/mailer.php';
             $mail->setFrom("noreplay@example.com");
             $mail->addAddress($email);
-            $mail->Subject = "Solicitud de cambio de contraseña";
+            $mail->Subject = "Solicitud para recuperar tu cuenta";
             $mail->Body   = <<<END
 
             Hola aprendiz,<br><br>
@@ -67,7 +67,7 @@ if(isset($_POST['send'])){
             swal.fire({
                 icon: 'success',
                 title: 'Mensaje enviado!',
-                text: 'Te acabamos de enviar un mensaje de restablecimiento de contraseña al correo <?php echo $email; ?>',
+                text: 'Te acabamos de enviar un mensaje de recuperación de cuenta al correo <?php echo $email; ?>',
                 allowEscapeKey: false,
                 allowOutsideClick: false,
             }).then((result) => {

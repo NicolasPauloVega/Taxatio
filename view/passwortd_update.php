@@ -44,7 +44,7 @@
             <div class="card-body">
                 <form action="" method="POST">
                     <?php include '../controller/email.php' ?>
-                    <h1 class="text-success text-center">Recuperar contraseña</h1>
+                    <h1 class="text-success text-center">Recuperar Cuenta</h1>
 
                     <div class="mb-4">
                         <label for="email" class="form-label text-success">Correo Electrónico:</label>
