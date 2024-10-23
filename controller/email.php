@@ -9,6 +9,7 @@ if(isset($_POST['send'])){
         
         $expiry = date("Y-m-d H:i:s", time() + 60 * 30);
 
+        // $mysqli = mysqli_connect('localhost', 'u813237171_admin', 'Taxatio2024**', 'u813237171_taxatio');
         $mysqli = mysqli_connect('localhost', 'root', '', 'taxatio');
         $sql = "UPDATE usuario SET reset_token_hash = ?, reset_token_expires_at = ? WHERE Correo_electronico = '{$email}'";
 

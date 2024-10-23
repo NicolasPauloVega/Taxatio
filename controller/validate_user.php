@@ -12,16 +12,18 @@ if (isset($_POST["login"])) {
         $user = $_POST["user"];
         $pass = $_POST["pass"];
 
-        // Realizamos una consulta para obtener el usuario
-        $sql = "SELECT * FROM usuario WHERE Numero_documento = '$user'";
+        // Preparamos la consulta para evitar SQL Injection
+        $stmt = $connection->prepare("SELECT * FROM usuario WHERE Numero_documento = ?");
+        $stmt->bind_param("s", $user); // "s" indica que es un string
         
         // Ejecutamos la consulta
-        $query = mysqli_query($connection, $sql);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
         // Verificamos si se encontró el usuario
-        if ($query && mysqli_num_rows($query) > 0) {
+        if ($result && $result->num_rows > 0) {
             // Almacenamos la información en un array asociativo
-            $row = mysqli_fetch_assoc($query);
+            $row = $result->fetch_assoc();
 
             // Verificamos si la contraseña es correcta
             if (password_verify($pass, $row['Contrasena'])) {
@@ -61,7 +63,7 @@ if (isset($_POST["login"])) {
                         });
                     </script>";
                 }
-                // Si no exite
+                // Si no existe
                 else {
                     echo "
                     <script>
@@ -112,6 +114,9 @@ if (isset($_POST["login"])) {
                 });
             </script>";
         }
+
+        // Cerramos la sentencia
+        $stmt->close();
     }
     ?>
     <script>

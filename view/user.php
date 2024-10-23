@@ -13,7 +13,7 @@
     include('../model/database.php'); // Incluir la base de datos
 
     // Realizamos la consulta
-    $sql = "SELECT u.Nombre, u.Apellido, r.Tipo, u.Id_usuario 
+    $sql = "SELECT u.Nombre, u.Apellido, r.Tipo, u.Id_usuario, u.Tipo_documento, u.Numero_documento, u.Correo_electronico 
             FROM usuario u 
             JOIN rol r ON u.Id_rol = r.Id_rol 
             WHERE Id_usuario = $user";
@@ -26,6 +26,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../assets/img/logo.png" type="image/png">
     <title>Perfil - Taxatio</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -39,7 +40,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-success" style="padding: 1.2rem;">
         <div class="container-fluid">
-            <a class="navbar-brand d-flex align-items-center" href="#">
+            <a class="navbar-brand d-flex align-items-center" href="./home.php">
                 <img src="../assets/img/logo.png" alt="Logo" width="35" height="35" class="d-inline-block align-text-top">
                 <span class="text-white ms-2 fs-4">Taxatio</span>
             </a>
@@ -73,28 +74,30 @@
             <div class="col-md-8">
                 <div class="card border-success">
                     <div class="card-header bg-success text-white text-center">
-                        <h2>Perfil de Usuario</h2>
+                        <h2>Perfil del aprendiz</h2>
                     </div>
                     <div class="card-body">
                         <table class="table table-borderless text-center">
                             <thead>
                                 <tr>
-                                    <th>Icono</th>
-                                    <th>Rol</th>
-                                    <th>Nombre Completo</th>
-                                    <th>Actualizar</th>
+                                    <th></th>
+                                    <th>Nombre completo</th>
+                                    <th>Documento</th>
+                                    <th>Correo electrónico</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><i class="fa-solid fa-user-tie fa-2x text-success"></i></td>
-                                    <td><?php echo $row['Tipo']; ?></td>
-                                    <td><?php echo $row['Nombre'] . " " . $row['Apellido']; ?></td>
-                                    <td><a href="./update_user.php" class="text-warning"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                                    <td class="align-middle"><i class="fa-solid fa-user-tie fa-2x text-success"></i></td>
+                                    <td class="align-middle"><?php echo $row['Nombre'] . " " . $row['Apellido']; ?></td>
+                                    <td class="align-middle"><?php echo $row['Tipo_documento'] . " - " . $row['Numero_documento']; ?></td>
+                                    <td class="align-middle"><?php echo $row['Correo_electronico']; ?></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
+                    <p class="text-center">Si deseas solicitar una actualización en tu documentación, un cambio de correo u otro dato personal, por favor comunícate al siguiente correo: taxatio.sena@gmail.com.</p>
+
                 </div>
             </div>
         </div>

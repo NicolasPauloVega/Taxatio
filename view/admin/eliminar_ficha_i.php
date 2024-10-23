@@ -1,24 +1,28 @@
 <?php
-    ///////////////////////////////// Manejo de sesiones /////////////////////////////////////////////
-    // Manejo de sesiones
-    session_start();
+session_start();
 
-    include '../../model/database.php';
+include('../../model/database.php');
 
-    // Verificamos si el usuario está logueado o no
-    if (!isset($_SESSION['usuario']) || $_SESSION['usuario'] == '' || $_SESSION['usuario'] != 1) {
-        header('location: ../../view/home.php');
-        exit();
-    }
+if (!isset($_SESSION['usuario']) || $_SESSION['usuario'] == '' || $_SESSION['usuario'] != 1) {
+    header('location: ../../view/home.php');
+    exit();
+}
 
-    // Almacenamos la sesion
-    $user = $_SESSION['usuario'];
+$user = $_SESSION['usuario'];
 
-    $id = $_GET['id'];
+$id = $_GET['id'];
 
-    $sql = "SELECT * FROM usuario WHERE Id_usuario = $id ";
-    $query = mysqli_query($connection, $sql);
-    $row = mysqli_fetch_array($query);
+$sql = "SELECT f_i.Competencia, f.Numero_ficha, f.Nombre_ficha, f_i.Id_Ficha_instructor 
+        FROM usuario u 
+        JOIN ficha_instructor f_i ON u.id_usuario = f_i.Id_usuario 
+        JOIN ficha f ON f_i.Id_ficha = f.Id_ficha 
+        WHERE u.Id_usuario = $id AND f_i.Vinculado = 'Si'";
+
+$query = mysqli_query($connection, $sql);
+
+if (!$query) {
+    die('Error en la consulta: ' . mysqli_error($connection));
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -26,7 +30,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../../assets/img/logo.png" type="image/png">
-    <title>Gestión de Usuarios - Taxatio</title>
+    <title>Desvincular ficha - Taxatio</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Iconos de FontAwesome -->
@@ -35,7 +39,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-light">
-
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-success">
         <div class="container-fluid">
@@ -69,34 +72,39 @@
                 </ul>
             </div>
         </div>
-    </nav><br><br>
+    </nav>
 
-    <!-- Contenido de Gestión de Usuarios -->
-    <div class="d-flex justify-content-center align-items-center vh-95 text-center">
-        <div class="card p-4 shadow-sm" style="max-width: 500px; width: 100%; background-color: #ffffff;">
-            <div class="card-body">
-                <h3 class="card-title text-center mb-4 text-success">Asignar ficha al aprendiz</h3>
-                <form action="" method="POST">
-                    <?php include '../../controller/asig_ficha.php'; ?>
-                    <div class="mb-3" style="display: none;">
-                        <input type="number" class="form-control text-success border-success" name="user" id="user" value="<?php echo $row['Id_usuario'] ?>">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="number" class="form-label">Numero de ficha</label>
-                        <input type="text" class="form-control text-success border-success" name="number" id="number" placeholder="Ingresa el numero de ficha del programa">
-                    </div>
-
-                    <div class="mb-3">
-                        <input type="submit" value="Asignar" name="assign" id="assign" class="btn btn-success">
-                    </div>
-                    <a href="./aprendiz.php?id=2" class="text-success">Volver</a>
-                </form>
-            </div>
+    <div class="container mt-5">
+        <h2 class="mb-4">Desvincular Fichas</h2>
+        <p>En la siguiente tabla, encontrarás todas las fichas asignadas a este instructor. Si deseas desvincularlo de alguna ficha (ya sea porque se terminó el trimestre o porque dejó de ser el gerente de grupo), puedes hacerlo presionando la "x".</p>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Ficha</th>
+                        <th>Formación</th>
+                        <th>Competencia</th>
+                        <th>Desvincular</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if(mysqli_num_rows($query) == 0){ ?>
+                        <tr>
+                            <td colspan="4" class="text-center">No se encontraron fichas asignadas</td>
+                        </tr>
+                    <?php } else { ?>
+                        <?php while($row = mysqli_fetch_assoc($query)): ?>
+                            <tr>
+                                <td><?= $row['Numero_ficha']; ?></td>
+                                <td><?= $row['Nombre_ficha']; ?></td>
+                                <td><?= $row['Competencia']; ?></td>
+                                <td><a href="../../controller/desvincular_ficha_i.php?id=<?= $row['Id_Ficha_instructor'] ?>&id_instructor=<?= $id ?>" class="btn btn-danger btn-sm"><i class="fa-solid fa-xmark"></i></a></td>
+                            </tr>
+                        <?php endwhile; ?>
+                    <?php } ?>
+                </tbody>
+            </table>
         </div>
     </div>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

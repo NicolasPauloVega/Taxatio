@@ -39,7 +39,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
     if($respuesta_existente){
         header('location: ./form/warning.php');
-        exit();
     } elseif($exito_insercion) {
         echo "<script src='../assets/js/success.js'></script>";
     } else {

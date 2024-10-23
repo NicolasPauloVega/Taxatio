@@ -7,6 +7,7 @@
             $token      = $_POST['token'];
             $token_hash = hash("sha256", $token);
 
+            // $mysqli = mysqli_connect('localhost', 'u813237171_admin', 'Taxatio2024**', 'u813237171_taxatio');
             $mysqli = mysqli_connect('localhost', 'root', '', 'taxatio');
 
             $sql  = "SELECT * FROM usuario WHERE reset_token_hash = ?";
@@ -27,7 +28,7 @@
                         allowOutsideClick: false,
                     }).then((result) => {
                         if (result.value) {
-                            window.location.href = '../email.php';
+                            window.location.href = '../../index.php';
                         }
                     });
                 </script>
@@ -44,7 +45,7 @@
                         allowOutsideClick: false,
                     }).then((result) => {
                         if (result.value) {
-                            window.location.href = '../email.php';
+                            window.location.href = '../../index.php';
                         }
                     });
                 </script>
@@ -91,7 +92,7 @@
                             allowOutsideClick: false,
                         }).then((result) => {
                             if (result.value) {
-                                window.location.href = './password.php?id={$id}';
+                                window.location.href = '../../index.php';
                             }
                         });
                     </script>
